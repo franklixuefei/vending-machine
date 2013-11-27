@@ -7,6 +7,10 @@
 
 _Task Parent {
     void main();
+    Printer & mPrt;
+    Bank & mBank;
+    unsigned int mNumStudents;
+    unsigned int mParentalDely;
   public:
     Parent( Printer &prt, Bank &bank, unsigned int numStudents, unsigned int parentalDelay );
 };

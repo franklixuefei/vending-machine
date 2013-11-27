@@ -1,6 +1,7 @@
 #ifndef __BOTTLINGPLANT_H__
 #define __BOTTLINGPLANT_H__
 
+#include "global.h"
 #include "printer.h"
 #include "nameserver.h"
 

@@ -1,6 +1,7 @@
 #ifndef __NAMESERVER_H__
 #define __NAMESERVER_H__
 
+#include "global.h"
 #include "vendingmachine.h"
 
 _Task NameServer {
