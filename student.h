@@ -6,7 +6,9 @@
 #include "watcardoffice.h"
 
 _Task Student {
-    void main();
+    void main() {
+
+    }
   public:
     Student( Printer &prt, NameServer &nameServer, WATCardOffice &cardOffice, unsigned int id,
              unsigned int maxPurchases );

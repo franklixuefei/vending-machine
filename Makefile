@@ -6,7 +6,7 @@ MAKEFILE_NAME = ${firstword ${MAKEFILE_LIST}}	# makefile name
 
 OBJECTS = parent.o vendingmachine.o watcard.o watcardoffice.o printer.o student.o bank.o nameserver.o bottlingplant.o driver.o truck.o
 DEPENDS = ${OBJECTS:.o=.d}			# substitute ".o" with ".d"
-EXEC = phil
+EXEC = soda
 
 .PHONY : clean
 

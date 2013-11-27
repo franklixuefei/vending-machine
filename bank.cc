@@ -1,5 +1,7 @@
-#ifndef BANK_H_CS343
-#define BANK_H_CS343 
+#ifndef BANK_CC_CS343
+#define BANK_CC_CS343 
+
+#include "bank.h"
 
 Bank::Bank( unsigned int numStudents ){
 

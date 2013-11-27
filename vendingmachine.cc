@@ -1,3 +1,5 @@
+#include "vendingmachine.h"
+
 void VendingMachine::main() {
 
 }
@@ -10,7 +12,7 @@ VendingMachine::~VendingMachine() {
 
 }
 
-Status VendingMachine::buy( Flavours flavour, WATCard &card ) {
+VendingMachine::Status VendingMachine::buy( Flavours flavour, WATCard &card ) {
 
 }
 

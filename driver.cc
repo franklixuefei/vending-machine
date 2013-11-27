@@ -1,8 +1,9 @@
 #ifndef DRIVER_CC_CS343
 #define DRIVER_CC_CS343
 
-#include "driver.h"
 #include <iostream>
+#include "global.h"
+
 
 using namespace std;
 
@@ -18,7 +19,7 @@ void printError(string s = "") {
   exit(1);
 }
 
-
+MPRNG RANDOM;
 
 
 void uMain::main(){
@@ -55,7 +56,7 @@ void uMain::main(){
     break;
   }
   // set a random seed to generator
-  ranGen.seed(Seed);
+  RANDOM.seed(Seed);
 
 
   // uProcessor p[ numOfPhilosophers + 1 ] __attribute__(( unused ));

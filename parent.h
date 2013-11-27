@@ -10,9 +10,10 @@ _Task Parent {
     Printer & mPrt;
     Bank & mBank;
     unsigned int mNumStudents;
-    unsigned int mParentalDely;
+    unsigned int mParentalDelay;
   public:
     Parent( Printer &prt, Bank &bank, unsigned int numStudents, unsigned int parentalDelay );
+    ~Parent();
 };
 
 #endif /* __PARENT_H__ */

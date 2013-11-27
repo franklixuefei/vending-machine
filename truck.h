@@ -5,10 +5,14 @@
 #include "bottlingplant.h"
 
 _Task Truck {
-    void main();
+    void main() {
+
+    }
   public:
     Truck( Printer &prt, NameServer &nameServer, BottlingPlant &plant,
-           unsigned int numVendingMachines, unsigned int maxStockPerFlavour );
+           unsigned int numVendingMachines, unsigned int maxStockPerFlavour ) {
+    	
+    }
 };
 
 #endif /* __TRUCK_H__ */
