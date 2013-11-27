@@ -2,6 +2,10 @@
 #define __PRINTER_H__
 
 _Cormonitor Printer {
+	unsigned int mNumStudents;
+	unsigned int mNumVendingMachines;
+	unsigned int mNumCouriers;
+	
   public:
     enum Kind { Parent, WATCardOffice, NameServer, Truck, BottlingPlant, Student, Vending, Courier };
     Printer( unsigned int numStudents, unsigned int numVendingMachines, unsigned int numCouriers );

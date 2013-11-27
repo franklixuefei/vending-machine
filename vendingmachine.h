@@ -1,17 +1,24 @@
 #ifndef __VENDINGMACHINE_H__
 #define __VENDINGMACHINE_H__
 
+#include "global.h"
 #include "nameserver.h"
 #include "flavours.h"
 #include "watcard.h"
 
 _Task VendingMachine {
     void main();
+    Printer & mPrt;
+    NameServer & mNameServer;
+    unsigned int mId;
+    unsigned int mSodaCost;
+    unsigned int mMaxStockPerFlavour;
   public:
     enum Flavours { ... };                 // flavours of soda (YOU DEFINE)
     enum Status { BUY, STOCK, FUNDS };     // purchase status: successful buy, out of stock, insufficient funds
     VendingMachine( Printer &prt, NameServer &nameServer, unsigned int id, unsigned int sodaCost,
                     unsigned int maxStockPerFlavour );
+    ~VendingMachine();
     Status buy( Flavours flavour, WATCard &card );
     unsigned int *inventory();
     void restocked();
