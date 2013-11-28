@@ -6,12 +6,15 @@
 #include "watcardoffice.h"
 
 _Task Student {
-    void main() {
-
-    }
+    void main();
+    Printer &prt;
+    NameServer &nameServer;
+    WATCardOffice &cardOffice;
+    unsigned int id;
+    unsigned int maxPurchases;
   public:
-    Student( Printer &prt, NameServer &nameServer, WATCardOffice &cardOffice, unsigned int id,
-             unsigned int maxPurchases );
+    Student( Printer &prt, NameServer &nameServer, WATCardOffice &cardOffice, unsigned int id, unsigned int maxPurchases );
+    ~Student();
 };
 
 #endif
