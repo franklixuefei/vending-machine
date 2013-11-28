@@ -4,7 +4,7 @@ CXX = u++					# compiler
 CXXFLAGS = -g -Wall -Wno-unused-label -MMD -DTABLETYPE_${TYPE}
 MAKEFILE_NAME = ${firstword ${MAKEFILE_LIST}}	# makefile name
 
-OBJECTS = parent.o vendingmachine.o watcard.o watcardoffice.o printer.o student.o bank.o nameserver.o bottlingplant.o driver.o truck.o
+OBJECTS = parent.o vendingmachine.o watcard.o watcardoffice.o printer.o student.o bank.o nameserver.o bottlingplant.o driver.o truck.o config.o
 DEPENDS = ${OBJECTS:.o=.d}			# substitute ".o" with ".d"
 EXEC = soda
 
