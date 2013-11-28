@@ -8,22 +8,26 @@
 _Task VendingMachine;
 
 _Task NameServer {
-    void main() {
-
-    }
+    void main();
   public:
-    NameServer( Printer &prt, unsigned int numVendingMachines, unsigned int numStudents ) {
+    NameServer( Printer &prt, unsigned int numVendingMachines, unsigned int numStudents );
+    ~NameServer();
+    void VMregister( VendingMachine *vendingmachine );
+    VendingMachine *getMachine( unsigned int id );
+    VendingMachine **getMachineList();
 
-    }
-    void VMregister( VendingMachine *vendingmachine ) {
+private:
+    Printer &mPrt;
+    unsigned int mNumVendingMachines;
+    unsigned int mNumStudents;
 
-    }
-    VendingMachine *getMachine( unsigned int id ) {
-    	return NULL;
-    }
-    VendingMachine **getMachineList() {
-    	return NULL;
-    }
+    unsigned int mCycleCount;
+    VendingMachine ** mMachineList;
+    unsigned int * mStudentVendingMachineID;
+    unsigned int mCurrentVendingMachineCounter;
+
+    unsigned int mLastVisitedStudent;
+
 };
 
 #endif /* __NAMESERVER_H__ */
