@@ -3,7 +3,6 @@
 
 #include "global.h"
 #include "printer.h"
-// #include "vendingmachine.h"
 
 _Task VendingMachine;
 

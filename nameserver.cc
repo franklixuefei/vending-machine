@@ -52,6 +52,7 @@ NameServer::NameServer( Printer &prt, unsigned int numVendingMachines, unsigned 
 
 
 NameServer::~NameServer(){
+  mPrt.print(Printer::NameServer, 'F' );
   delete[] mMachineList;
   delete[] mStudentVendingMachineID;
 }
