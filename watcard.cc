@@ -3,27 +3,27 @@
 
 #include "watcard.h"
 
-WATCard::WATCard( const WATCard & w) : balance(w.balance) {}            // prevent copying
+WATCard::WATCard( const WATCard & w) : mBalance(w.mBalance) {}            // prevent copying
 
 WATCard & WATCard::operator=( const WATCard & w) {
-	this->balance = w.balance;
+	this->mBalance = w.mBalance;
 	return *this;
 }
 
-WATCard::WATCard() : balance(0) {}
+WATCard::WATCard() : mBalance(0) {}
 
 
 void WATCard::deposit( unsigned int amount ){
-	this->balance += amount;
+	this->mBalance += amount;
 }
 
 void WATCard::withdraw( unsigned int amount ){
-	this->balance -= amount;
-	assert(this->balance >= 0);
+	this->mBalance -= amount;
+	assert(this->mBalance >= 0);
 }
 
-unsigned int getBalance() {
-	return this->balance;
+unsigned int WATCard::getBalance() {
+	return this->mBalance;
 }
 
 #endif

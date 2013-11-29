@@ -4,15 +4,16 @@
 #include "printer.h"
 #include "nameserver.h"
 #include "watcardoffice.h"
+#include "vendingmachine.h"
 
 _Task Student {
     void main();
-    Printer &prt;
-    NameServer &nameServer;
-    WATCardOffice &cardOffice;
-    unsigned int id;
-    unsigned int maxPurchases;
-    WATCard *card;
+    Printer &mPrinter;
+    NameServer &mNameServer;
+    WATCardOffice &mCardOffice;
+    unsigned int mId;
+    unsigned int mMaxPurchases;
+    WATCard *mCard;
   public:
     Student( Printer &prt, NameServer &nameServer, WATCardOffice &cardOffice, unsigned int id, unsigned int maxPurchases );
     ~Student();
