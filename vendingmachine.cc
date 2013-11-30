@@ -36,6 +36,7 @@ represent the differentflavours of soda.
 
 
 void VendingMachine::main() {
+    mNameServer.VMregister(this);
     for( ;; ) {
     _Accept( ~VendingMachine ){
       break;
