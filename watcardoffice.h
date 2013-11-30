@@ -5,19 +5,35 @@
 #include "bank.h"
 #include "printer.h"
 #include "watcard.h"
-
+using namespace std;
 
 _Task WATCardOffice {
-    struct Job {                           // marshalled arguments and return future
-        // Args args;                         // call arguments (YOU DEFINE "Args")
-        int args; // FIXME
-        WATCard::FWATCard result;                   // return future
-        // Job( Args args ) : args( args ) {}
-        Job( int args ) : args( args ) {} // FIXME
+    struct Args {
+        WATCard *mCard;
+        unsigned int mId;
+        unsigned int mTransAmount;
     };
-    _Task Courier { /*...*/ };                 // communicates with bank
+    struct Job {                           // marshalled arguments and return future
+        Args args;                         // call arguments (YOU DEFINE "Args")
+        WATCard::FWATCard result;                   // return future
+        Job( Args args ) : args( args ) {}
+    };
+    _Task Courier {
+        void main();
+        WATCardOffice &mOffice;
+        Bank &mBank;
+        unsigned int mId;
+    public:
+        Courier(WATCardOffice &office, Bank &bank, unsigned int id);
+     }; // communicates with bank
 
     void main();
+    Printer &mPrinter;
+    Bank &mBank;
+    unsigned int mNumCouriers;
+    Courier **mCouriers;
+    uCondition workRequest;
+    queue<Job*> jobs;
   public:
     _Event Lost {};                        // uC++ exception type, like "struct"
     WATCardOffice( Printer &prt, Bank &bank, unsigned int numCouriers );

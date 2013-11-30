@@ -10,7 +10,7 @@ void Parent::main() {
       yield( mParentalDelay );
 
       unsigned int studentID = RANDOM(mNumStudents-1);
-      unsigned int amount = RANDOM(0, 3);
+      unsigned int amount = RANDOM(3);
       // The Parent task periodically gives a random amount of money [$1, $3] to a random student. 
       mBank.deposit(studentID, amount);
       // Since it must not block on this call, it is necessary to use a terminating
