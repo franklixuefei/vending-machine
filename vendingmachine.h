@@ -12,8 +12,9 @@ _Task VendingMachine {
     unsigned int mId;
     unsigned int mSodaCost;
     unsigned int mMaxStockPerFlavour;
-    bool mRestocking;
-    unsigned int mSodaStock[4];
+
+    unsigned int* mStocksLevel;
+
   public:
     enum Flavours { ORANGE, APPLE, LEMON, GRAPE };  // flavours of soda
     enum Status { BUY, STOCK, FUNDS };     // purchase status: successful buy, out of stock, insufficient funds
