@@ -18,6 +18,7 @@ _Task BottlingPlant {
     bool mPlantClosingDown;
     unsigned int mCurrentProdRun[4];
     Truck *truck;
+    unsigned int _calcTotalProd();
   public:
     BottlingPlant( Printer &prt, NameServer &nameServer, unsigned int numVendingMachines,
                  unsigned int maxShippedPerFlavour, unsigned int maxStockPerFlavour,

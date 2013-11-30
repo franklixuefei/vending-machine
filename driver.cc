@@ -73,16 +73,18 @@ void uMain::main(){
     for (unsigned int i = 0; i < cparms.numVendingMachines; ++i) {
         vms[i] = new VendingMachine(*printer, *ns, i, cparms.sodaCost, cparms.maxStockPerFlavour);
     }
+    BottlingPlant *botPlant = new BottlingPlant(*printer, *ns, cparms.numVendingMachines, cparms.maxShippedPerFlavour, cparms.maxStockPerFlavour, cparms.timeBetweenShipments);
     Student * students[cparms.numStudents];
     for (unsigned int i = 0; i < cparms.numStudents; ++i) {
         students[i] = new Student(*printer, *ns, *wco, i, cparms.maxPurchases);
     }
-    BottlingPlant *botPlant = new BottlingPlant(*printer, *ns, cparms.numVendingMachines, cparms.maxShippedPerFlavour, cparms.maxStockPerFlavour, cparms.timeBetweenShipments);
+    
 
-    delete botPlant;
+    
     for (unsigned int i = 0; i < cparms.numStudents; ++i) {
         delete students[i];
     }
+    delete botPlant;
     for (unsigned int i = 0; i < cparms.numVendingMachines; ++i) {
         delete vms[i];
     }

@@ -3,9 +3,9 @@
 
 
 _Monitor Bank {
+	unsigned int mNumStudents;
 	uCondition * mSuffFund;
 	int * mAccountBal;
-	unsigned int mNumStudents;
   public:
     Bank( unsigned int numStudents );
     ~Bank();
