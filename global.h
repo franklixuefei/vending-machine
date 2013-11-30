@@ -1,5 +1,5 @@
-#ifndef GLOBAL_H_CS343
-#define GLOBAL_H_CS343 
+#ifndef __GLOBAL_H__
+#define __GLOBAL_H__
 
 
 
@@ -16,4 +16,4 @@ using namespace std;
 
 
 
-#endif
+#endif /* __GLOBAL_H__ */
