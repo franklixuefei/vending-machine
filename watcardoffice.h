@@ -5,6 +5,7 @@
 #include "bank.h"
 #include "printer.h"
 #include "watcard.h"
+#include <queue>
 using namespace std;
 
 _Task WATCardOffice {
@@ -32,11 +33,13 @@ _Task WATCardOffice {
     Bank &mBank;
     unsigned int mNumCouriers;
     Courier **mCouriers;
-    uCondition workRequest;
-    queue<Job*> jobs;
+    uCondition mWorkRequest;
+    queue<Job*> mJobs;
+    bool mDone;
   public:
     _Event Lost {};                        // uC++ exception type, like "struct"
     WATCardOffice( Printer &prt, Bank &bank, unsigned int numCouriers );
+    ~WATCardOffice();
     WATCard::FWATCard create( unsigned int sid, unsigned int amount );
     WATCard::FWATCard transfer( unsigned int sid, unsigned int amount, WATCard *card );
     Job *requestWork();

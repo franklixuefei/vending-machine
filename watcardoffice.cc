@@ -7,16 +7,23 @@ WATCardOffice::Courier::Courier(WATCardOffice &office, Bank &bank, unsigned int 
 	: mOffice(office), mBank(bank), mId(id) {}
 
 void WATCardOffice::Courier::main() {
+	this->mOffice.mPrinter.print(Printer::Courier, this->mId, 'S');
 	for (;;) {
 		Job* job = this->mOffice.requestWork();
-		this->mBank.withdraw(job->mId);
-		WATCard *card = job->mCard;
-		card->deposit(job->mTransAmount);
-		if (RANDOM(5) == 0) {
-			job->result.exception(Lost());
+		if (!job) {
+			break;
+		}
+		this->mOffice.mPrinter.print(Printer::Courier, this->mId, 't', (int)job->args.mId, (int)job->args.mTransAmount);
+		this->mBank.withdraw(job->args.mId, job->args.mTransAmount);
+		this->mOffice.mPrinter.print(Printer::Courier, this->mId, 'T', (int)job->args.mId, (int)job->args.mTransAmount);
+		WATCard *card = job->args.mCard;
+		card->deposit(job->args.mTransAmount);
+		if (RANDOM(5) == 0) { // lose card!!!
+			job->result.exception(new Lost());
 			delete card;
-		} else {
+		} else { // normal case
 			job->result.delivery(card);
+			this->mOffice.mPrinter.print(Printer::WATCardOffice, 'W');
 		}
 		delete job;
 	}
@@ -25,6 +32,7 @@ void WATCardOffice::Courier::main() {
 void WATCardOffice::main() {
 	for (;;) {
 		_Accept(~WATCardOffice) {
+			this->mDone = true;
 			break;
 		} or _Accept(create) {
 
@@ -37,10 +45,24 @@ void WATCardOffice::main() {
 }
 
 WATCardOffice::WATCardOffice( Printer &prt, Bank &bank, unsigned int numCouriers )
-: mPrinter(prt), mBank(bank), mNumCouriers(numCouriers) {
+: mPrinter(prt), mBank(bank), mNumCouriers(numCouriers), mDone(false) {
 	this->mCouriers = new Courier* [mNumCouriers];
-	for (int i = 0; i < mNumCouriers; ++i) {
-		this->mCouriers[i] = new WATCardOffice::Courier(*this, mBank, i);
+	for (unsigned int i = 0; i < this->mNumCouriers; ++i) {
+		this->mCouriers[i] = new Courier(*this, mBank, i);
+	}
+}
+
+WATCardOffice::~WATCardOffice() {
+	if (!this->mWorkRequest.empty()) {
+		this->mWorkRequest.signalBlock();
+	}
+	for (unsigned int i = 0; i < this->mNumCouriers; ++i) {
+		delete this->mCouriers[i];
+	}
+	delete [] this->mCouriers;
+	while(this->mJobs.empty()) {
+		delete this->mJobs.front();
+		this->mJobs.pop();
 	}
 }
 
@@ -50,9 +72,10 @@ WATCard::FWATCard WATCardOffice::create( unsigned int sid, unsigned int amount )
 	args.mId = sid;
 	args.mTransAmount = amount;
 	Job *job = new Job(args);
-	this->jobs.push(job);
-	this->workRequest.signal();
-	return job.result;
+	this->mJobs.push(job);
+	this->mWorkRequest.signal();
+	this->mPrinter.print(Printer::WATCardOffice, 'C', (int)sid, (int)amount);
+	return job->result;
 }
 
 WATCard::FWATCard WATCardOffice::transfer( unsigned int sid, unsigned int amount, WATCard *card ) {
@@ -61,17 +84,22 @@ WATCard::FWATCard WATCardOffice::transfer( unsigned int sid, unsigned int amount
 	args.mId = sid;
 	args.mTransAmount = amount;
 	Job *job = new Job(args);
-	this->jobs.push(job);
-	this->workRequest.signal();
-	return job.result;
+	this->mJobs.push(job);
+	this->mWorkRequest.signal();
+	this->mPrinter.print(Printer::WATCardOffice, 'T', (int)sid, (int)amount);
+	return job->result;
 }
 
 WATCardOffice::Job * WATCardOffice::requestWork() {
-	if (this->jobs.empty()) {
-		this->workRequest.wait();
+	if (this->mDone == false && this->mJobs.empty()) {
+		this->mWorkRequest.wait();	
 	}
-	Job* job = this->jobs.front();
-	this->jobs.pop();
+	if (this->mDone) {
+		this->mWorkRequest.signal();
+		return NULL;
+	}
+	Job* job = this->mJobs.front();
+	this->mJobs.pop();
 	return job;
 }
 
