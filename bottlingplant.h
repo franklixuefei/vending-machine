@@ -5,20 +5,25 @@
 #include "printer.h"
 #include "nameserver.h"
 
+_Task Truck;
 
 _Task BottlingPlant {
-    void main() {
-
-    }
+    void main();
+    Printer & mPrinter;
+    NameServer & mNameServer;
+    unsigned int mNumVendingMachines;
+    unsigned int mMaxShippedPerFlavour;
+    unsigned int mMaxStockPerFlavour;
+    unsigned int mTimeBetweenShipments;
+    bool mPlantClosingDown;
+    unsigned int mCurrentProdRun[4];
+    Truck *truck;
   public:
     BottlingPlant( Printer &prt, NameServer &nameServer, unsigned int numVendingMachines,
                  unsigned int maxShippedPerFlavour, unsigned int maxStockPerFlavour,
-                 unsigned int timeBetweenShipments ) {
-
-    }
-    bool getShipment( unsigned int cargo[] ) {
-    	
-    }
+                 unsigned int timeBetweenShipments );
+    bool getShipment( unsigned int cargo[] );
+    ~BottlingPlant();
 };
 
 #endif /* __BOTTLINGPLANT_H__ */

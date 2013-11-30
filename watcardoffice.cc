@@ -56,6 +56,7 @@ WATCardOffice::~WATCardOffice() {
 	if (!this->mWorkRequest.empty()) {
 		this->mWorkRequest.signalBlock();
 	}
+	// maybe deadlock here?????
 	for (unsigned int i = 0; i < this->mNumCouriers; ++i) {
 		delete this->mCouriers[i];
 	}
