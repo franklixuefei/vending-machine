@@ -78,9 +78,7 @@ void uMain::main(){
     for (unsigned int i = 0; i < cparms.numStudents; ++i) {
         students[i] = new Student(*printer, *ns, *wco, i, cparms.maxPurchases);
     }
-    
 
-    
     for (unsigned int i = 0; i < cparms.numStudents; ++i) {
         delete students[i];
     }

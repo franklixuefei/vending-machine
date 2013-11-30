@@ -20,7 +20,6 @@ private:
     unsigned int mNumVendingMachines;
     unsigned int mNumStudents;
 
-    unsigned int mCycleCount;
     VendingMachine ** mMachineList;
     unsigned int * mStudentVendingMachineID;
     unsigned int mCurrentVendingMachineCounter;

@@ -38,7 +38,6 @@ NameServer::NameServer( Printer &prt, unsigned int numVendingMachines, unsigned 
   :mPrt(prt),
   mNumVendingMachines(numVendingMachines),
   mNumStudents(numStudents), 
-  mCycleCount(0),
   mMachineList(new VendingMachine*[numVendingMachines]), 
   mStudentVendingMachineID(new unsigned int[mNumStudents]),
   mCurrentVendingMachineCounter(0) {
@@ -46,6 +45,9 @@ NameServer::NameServer( Printer &prt, unsigned int numVendingMachines, unsigned 
     mPrt.print(Printer::NameServer, 'S' );
     for (unsigned int i = 0; i < mNumStudents; ++i) {
       mStudentVendingMachineID[i] = (i)%mNumVendingMachines;
+    }
+    for (unsigned int i = 0; i < numVendingMachines; ++i) {
+        mMachineList[i] = NULL;
     }
 
 }
@@ -66,7 +68,9 @@ void NameServer::VMregister( VendingMachine *vendingmachine ) {
 VendingMachine *NameServer::getMachine( unsigned int id ) {
   mPrt.print(Printer::NameServer, 'N', id, mStudentVendingMachineID[id]);
   mLastVisitedStudent = id;
-  return mMachineList[mStudentVendingMachineID[id]];
+  VendingMachine * vm = mMachineList[mStudentVendingMachineID[id]];
+  assert(vm != NULL);
+  return vm;
 }
 
 
