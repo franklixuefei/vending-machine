@@ -7,6 +7,9 @@ void Printer::main() {
     if (!_canInsertData()) {
       _flashMap();
     }
+    if (mState == 'F' && !mDataMap.empty()) {
+      _flashMap();
+    }
     _insertData();
     if (mState == 'F') {
       _flashMap(true);
@@ -37,9 +40,9 @@ void Printer::_printHeader(){
 
 
 void Printer::_flashMap(bool isDotFlash){
-  for (unsigned int k = 0; k < (mNumStudents+ mNumVendingMachines+ mNumCouriers + 5); ++k) {
+  for (unsigned int k = 0; k < (3 + 5); ++k) {
     if (mDataMap.find(k) != mDataMap.end()) {
-
+      
       if (k == ((unsigned int) Printer::Student) || 
           k == ((unsigned int) Printer::Vending) || 
           k == ((unsigned int) Printer::Courier) ) {
@@ -61,15 +64,16 @@ void Printer::_flashMap(bool isDotFlash){
           }
           break;
           default:
-          assert (false);
+          {
+            assert (false);
+          }
         }
         for (int i = 0; i < times; ++i) {
           if (mDataMap[k].find(i) != mDataMap[k].end()){
             cout << mDataMap[k][i].first;
             if (mDataMap[k][i].second.first != ((unsigned int)-1)) {
               cout << mDataMap[k][i].second.first;
-              if (mDataMap[k][i].second.second != ((unsigned int)-1))
-              {
+              if (mDataMap[k][i].second.second != ((unsigned int)-1)) {
                 cout << "," <<mDataMap[k][i].second.second;
               }
             }
@@ -131,7 +135,6 @@ void Printer::_insertData(){
 }
 
 bool Printer::_canInsertData(){
-  return false;
   if (!mDataMap.empty()) {
     if (mDataMap.find(mKind) != mDataMap.end()){
       if (mKind <= ((unsigned int) BottlingPlant)) {
