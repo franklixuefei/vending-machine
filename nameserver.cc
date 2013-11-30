@@ -20,13 +20,13 @@ void NameServer::main() {
   for(;;){
     _Accept (~NameServer) {
       break;
-    } _Accept (VMregister) {
+    } or _Accept (VMregister) {
       mCurrentVendingMachineCounter ++;
 
-    } _Accept (getMachine) {
+    } or _Accept (getMachine) {
       mStudentVendingMachineID[mLastVisitedStudent] = (mStudentVendingMachineID[mLastVisitedStudent]+1) % mNumVendingMachines;
 
-    } _Accept (getMachineList) {
+    } or _Accept (getMachineList) {
 
     }
 
