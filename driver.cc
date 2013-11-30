@@ -64,19 +64,19 @@ void uMain::main(){
     RANDOM.seed(seed);
     processConfigFile(configFile.c_str(), cparms);
 
-    Printer *printer = new Printer(cparms.numStudents, cparms.numVendingMachines, cparms.numCouriers);
-    Bank *bank = new Bank(cparms.numStudents);
-    Parent *parent = new Parent(*printer, *bank, cparms.numStudents, cparms.parentalDelay);
-    WATCardOffice *wco = new WATCardOffice(*printer, *bank, cparms.numCouriers);
-    NameServer *ns = new NameServer(*printer, cparms.numVendingMachines, cparms.numStudents);
+    Printer printer(cparms.numStudents, cparms.numVendingMachines, cparms.numCouriers);
+    Bank bank(cparms.numStudents);
+    Parent parent(printer, bank, cparms.numStudents, cparms.parentalDelay);
+    WATCardOffice wco(printer, bank, cparms.numCouriers);
+    NameServer ns(printer, cparms.numVendingMachines, cparms.numStudents);
     VendingMachine *vms[cparms.numVendingMachines];
     for (unsigned int i = 0; i < cparms.numVendingMachines; ++i) {
-        vms[i] = new VendingMachine(*printer, *ns, i, cparms.sodaCost, cparms.maxStockPerFlavour);
+        vms[i] = new VendingMachine(printer, ns, i, cparms.sodaCost, cparms.maxStockPerFlavour);
     }
-    BottlingPlant *botPlant = new BottlingPlant(*printer, *ns, cparms.numVendingMachines, cparms.maxShippedPerFlavour, cparms.maxStockPerFlavour, cparms.timeBetweenShipments);
+    BottlingPlant *botPlant = new BottlingPlant(printer, ns, cparms.numVendingMachines, cparms.maxShippedPerFlavour, cparms.maxStockPerFlavour, cparms.timeBetweenShipments);
     Student * students[cparms.numStudents];
     for (unsigned int i = 0; i < cparms.numStudents; ++i) {
-        students[i] = new Student(*printer, *ns, *wco, i, cparms.maxPurchases);
+        students[i] = new Student(printer, ns, wco, i, cparms.maxPurchases);
     }
 
     for (unsigned int i = 0; i < cparms.numStudents; ++i) {
@@ -86,10 +86,6 @@ void uMain::main(){
     for (unsigned int i = 0; i < cparms.numVendingMachines; ++i) {
         delete vms[i];
     }
-    delete ns;
-    delete wco;
-    delete parent;
-    delete bank;
-    delete printer;
+    
     uRetCode = 0;
 }
