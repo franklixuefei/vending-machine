@@ -136,7 +136,37 @@ void Printer::_flashMap(bool isDotFlash){
         cout << "\t";
       }
     }else {
-      cout << "\t";
+      if (k == ((unsigned int) Printer::Student) || 
+          k == ((unsigned int) Printer::Vending) || 
+          k == ((unsigned int) Printer::Courier) ) {
+        unsigned int times;
+        switch (k){
+          case ((unsigned int) Printer::Student):
+          {
+            times = mNumStudents;
+          }
+          break;
+          case ((unsigned int) Printer::Vending):
+          {
+            times = mNumVendingMachines;
+          }
+          break;
+          case ((unsigned int) Printer::Courier):
+          {
+            times = mNumCouriers;
+          }
+          break;
+          default:
+          {
+            assert (false);
+          }
+        }
+        for (int i = 0; i < times; ++i) {
+          cout << "\t";
+        }
+      }else{
+        cout << "\t";
+      }
     }
   }
   cout << endl;
