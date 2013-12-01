@@ -86,8 +86,7 @@ unsigned int * VendingMachine::inventory() {
   return mStocksLevel;
 }
 
-void VendingMachine::restocked() {
-}
+void VendingMachine::restocked() {}
 
 _Nomutex unsigned int VendingMachine::cost() {
   return mSodaCost;
