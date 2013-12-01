@@ -42,12 +42,14 @@ void Printer::_printHeader(){
 void Printer::_flashMap(bool isDotFlash){
   for (unsigned int k = 0; k < (3 + 5); ++k) {
     if (mDataMap.find(k) != mDataMap.end()) {
-      
+
       if (k == ((unsigned int) Printer::Student) || 
           k == ((unsigned int) Printer::Vending) || 
           k == ((unsigned int) Printer::Courier) ) {
         unsigned int times;
         switch (k){
+
+
           case ((unsigned int) Printer::Student):
           {
             times = mNumStudents;
@@ -100,8 +102,39 @@ void Printer::_flashMap(bool isDotFlash){
       }
 
     } else if (isDotFlash) {
-      cout << "...";
-      cout << "\t";
+      if (k == ((unsigned int) Printer::Student) || 
+          k == ((unsigned int) Printer::Vending) || 
+          k == ((unsigned int) Printer::Courier) ) {
+        unsigned int times;
+        switch (k){
+          case ((unsigned int) Printer::Student):
+          {
+            times = mNumStudents;
+          }
+          break;
+          case ((unsigned int) Printer::Vending):
+          {
+            times = mNumVendingMachines;
+          }
+          break;
+          case ((unsigned int) Printer::Courier):
+          {
+            times = mNumCouriers;
+          }
+          break;
+          default:
+          {
+            assert (false);
+          }
+        }
+        for (int i = 0; i < times; ++i) {
+          cout << "...";
+          cout << "\t";
+        }
+      }else {
+        cout << "...";
+        cout << "\t";
+      }
     }else {
       cout << "\t";
     }
@@ -136,7 +169,7 @@ void Printer::_insertData(){
 
 bool Printer::_canInsertData(){
   if (!mDataMap.empty()) {
-    if (mDataMap.find(mKind) != mDataMap.end()){
+    if (mDataMap.find(mKind) != mDataMap.end()) {
       if (mKind <= ((unsigned int) BottlingPlant)) {
         return false;
       } else {
@@ -162,6 +195,7 @@ Printer::~Printer(){
   if (!mDataMap.empty()) {
     _flashMap();
   }
+  cout << "***********************" << endl;
 }
 
 
