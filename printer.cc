@@ -177,6 +177,29 @@ void Printer::_flashMap(bool isDotFlash){
 
 
 void Printer::_insertData(){
+
+
+  // FIXME: THE BUG
+  static int counter = 0;
+  static char last_State = mState;
+  if (last_State != mState) {
+    counter =0;
+    last_State= mState;
+  }else{
+    counter++;
+    if (counter > 200)
+    {
+      exit(1);
+    }
+  }
+
+
+
+
+
+
+
+
   if (mDataMap.find(mKind) == mDataMap.end()) {
     mDataMap[mKind] = std::map<unsigned int, pair<char, 
                             pair<unsigned int , unsigned int > 
