@@ -4,7 +4,8 @@
 #include "watcardoffice.h"
 
 WATCardOffice::Courier::Courier(WATCardOffice &office, Bank &bank, unsigned int id)
-	: mOffice(office), mBank(bank), mId(id) {}
+	: mOffice(office), mBank(bank), mId(id) {
+}
 
 WATCardOffice::Courier::~Courier() {
 	this->mOffice.mPrinter.print(Printer::Courier, this->mId, 'F');
@@ -53,6 +54,7 @@ WATCardOffice::WATCardOffice( Printer &prt, Bank &bank, unsigned int numCouriers
 	for (unsigned int i = 0; i < this->mNumCouriers; ++i) {
 		this->mCouriers[i] = new Courier(*this, mBank, i);
 	}
+	this->mPrinter.print(Printer::WATCardOffice, 'S');
 }
 
 WATCardOffice::~WATCardOffice() {

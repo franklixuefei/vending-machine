@@ -6,6 +6,7 @@
 void Student::main() {
 	unsigned int numPurchases = RANDOM(1, mMaxPurchases);
 	VendingMachine::Flavours flavour = static_cast<VendingMachine::Flavours>(RANDOM(3));
+	this->mPrinter.print(Printer::Student, this->mId, 'S', flavour, mMaxPurchases);	
 	WATCard::FWATCard fWATCard = mCardOffice.create(this->mId, 5);
 	VendingMachine *vm = mNameServer.getMachine(this->mId);
 	for (unsigned int i = 0; i < numPurchases; ++i) {

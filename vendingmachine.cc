@@ -61,7 +61,7 @@ VendingMachine::VendingMachine( Printer &prt, NameServer &nameServer, unsigned i
     mMaxStockPerFlavour(maxStockPerFlavour),
     mStocksLevel(new unsigned int[4]) {
       for (unsigned int i = 0; i < 4; ++i) {
-        mStocksLevel[i] = mMaxStockPerFlavour;
+        mStocksLevel[i] = 0;
       }
 }
 

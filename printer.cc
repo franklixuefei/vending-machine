@@ -230,7 +230,7 @@ Printer::~Printer(){
 
 
 void Printer::print( Kind kind, char state ) {
-  mKind = (unsigned int)kind;
+  mKind = static_cast<unsigned int>(kind);
   mState = state;
   mLid = 0;
   mValue1 = (unsigned int)-1;
@@ -242,7 +242,7 @@ void Printer::print( Kind kind, char state ) {
 
 
 void Printer::print( Kind kind, char state, int value1 ) {
-  mKind = (unsigned int)kind;
+  mKind = static_cast<unsigned int>(kind);
   mState = state;
   mLid = 0;
   mValue1 = value1;
@@ -254,7 +254,7 @@ void Printer::print( Kind kind, char state, int value1 ) {
 
 
 void Printer::print( Kind kind, char state, int value1, int value2 ) {
-  mKind = (unsigned int)kind;
+  mKind = static_cast<unsigned int>(kind);
   mLid = 0;
   mState = state;
   mValue1 = value1;
@@ -266,7 +266,7 @@ void Printer::print( Kind kind, char state, int value1, int value2 ) {
 
 
 void Printer::print( Kind kind, unsigned int lid, char state ) {
-  mKind = (unsigned int)kind;
+  mKind = static_cast<unsigned int>(kind);
   mLid = lid;
   mState = state;
   mValue1 = (unsigned int)-1;
@@ -278,7 +278,7 @@ void Printer::print( Kind kind, unsigned int lid, char state ) {
 
 
 void Printer::print( Kind kind, unsigned int lid, char state, int value1 ) {
-  mKind = (unsigned int)kind;
+  mKind = static_cast<unsigned int>(kind);
   mLid = lid;
   mState = state;
   mValue1 = value1;
@@ -291,7 +291,7 @@ void Printer::print( Kind kind, unsigned int lid, char state, int value1 ) {
 
 
 void Printer::print( Kind kind, unsigned int lid, char state, int value1, int value2 ) {
-  mKind = (unsigned int)kind;
+  mKind = static_cast<unsigned int>(kind);
   mLid = lid;
   mState = state;
   mValue1 = value1;
