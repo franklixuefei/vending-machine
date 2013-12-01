@@ -12,7 +12,7 @@ Bank::Bank( unsigned int numStudents )
 
 
 void Bank::deposit( unsigned int id, unsigned int amount ){
-	if ((this->mAccountBal[id] += amount) > 0) {
+	if ((this->mAccountBal[id] += amount) >= 0) {
 		this->mSuffFund[id].signal();
 	}
 }

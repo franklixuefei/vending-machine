@@ -11,6 +11,7 @@ void BottlingPlant::main() {
 		this->mPrinter.print(Printer::BottlingPlant, 'G', this->_calcTotalProd());
 		_Accept(~BottlingPlant) {
 			this->mPlantClosingDown = true;
+			
 			_Accept(getShipment); // propagate getShipment true.
 			// maybe deadlock here????
 			break;
@@ -34,14 +35,15 @@ BottlingPlant::BottlingPlant( Printer &prt, NameServer &nameServer, unsigned int
 : mPrinter(prt), mNameServer(nameServer), mNumVendingMachines(numVendingMachines), 
 mMaxShippedPerFlavour(maxShippedPerFlavour), mMaxStockPerFlavour(maxStockPerFlavour), 
 mTimeBetweenShipments(timeBetweenShipments), mPlantClosingDown(false), 
-truck(new Truck(prt, nameServer, *this, numVendingMachines, maxStockPerFlavour)) {
+truck(new Truck(prt, nameServer, *this, numVendingMachines, maxStockPerFlavour)), truckShouldDestroy(false) {
 	for (unsigned int i = 0; i < 4; ++i) {
 		this->mCurrentProdRun[i] = 0;
 	}
 }
 
 bool BottlingPlant::getShipment( unsigned int cargo[] ) {
-	if (this->mCurrentProdRun) {
+	if (this->mPlantClosingDown) {
+		truckShouldDestroy = true;
 		return true;
 	}
 	for (unsigned int i = 0; i < 4; ++i) {
@@ -52,4 +54,5 @@ bool BottlingPlant::getShipment( unsigned int cargo[] ) {
 
 BottlingPlant::~BottlingPlant() {
 	delete truck;
+	this->mPrinter.print(Printer::BottlingPlant, 'F'); 
 }

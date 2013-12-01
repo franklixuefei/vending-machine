@@ -6,6 +6,9 @@
 WATCardOffice::Courier::Courier(WATCardOffice &office, Bank &bank, unsigned int id)
 	: mOffice(office), mBank(bank), mId(id) {}
 
+WATCardOffice::Courier::~Courier() {
+	this->mOffice.mPrinter.print(Printer::Courier, this->mId, 'F');
+}
 void WATCardOffice::Courier::main() {
 	this->mOffice.mPrinter.print(Printer::Courier, this->mId, 'S');
 	for (;;) {
@@ -61,10 +64,11 @@ WATCardOffice::~WATCardOffice() {
 		delete this->mCouriers[i];
 	}
 	delete [] this->mCouriers;
-	while(this->mJobs.empty()) {
+	while(!this->mJobs.empty()) {
 		delete this->mJobs.front();
 		this->mJobs.pop();
 	}
+	this->mPrinter.print(Printer::WATCardOffice, 'F');
 }
 
 WATCard::FWATCard WATCardOffice::create( unsigned int sid, unsigned int amount ) {
