@@ -85,10 +85,3 @@ VendingMachine **NameServer::getMachineList() {
 }// NameServer::getMachineList
 
 
-eturn:    the list of machine (VendingMachine *)
- ************************************************************/
-VendingMachine **NameServer::getMachineList() {
-    return mMachineList;
-} // NameServer::getMachineList
-
-
