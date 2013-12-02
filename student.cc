@@ -3,6 +3,8 @@
 
 #include "student.h"
 
+
+
 void Student::main() {
 	unsigned int numPurchases = RANDOM(1, mMaxPurchases);
 	VendingMachine::Flavours flavour = static_cast<VendingMachine::Flavours>(RANDOM(3));
@@ -19,7 +21,7 @@ void Student::main() {
 			mPrinter.print(Printer::Student, 'L');
 			fWATCard = mCardOffice.create(this->mId, 5);
 			goto RETRY_GET_CARD;
-		}
+		} // try-catch block
 
 
 		VendingMachine::Status status = vm->buy(flavour, *mCard);

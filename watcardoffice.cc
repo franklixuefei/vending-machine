@@ -17,7 +17,17 @@ WATCardOffice::Courier::~Courier() {
 
 
 /***************** WATCardOffice::Courier::Courier ****************
- Purpose:   the execution body of Task Courier
+ Purpose:   the execution body of Task Courier.
+ 			The WATCard office is empowered to transfer funds from a 
+ 			student’s bank-account to its WATCard by sending a request 
+ 			through a courier to the bank. As soon as the request is 
+ 			satisfied (i.e., money is obtained from the bank), the courier
+ 			 updates the student’s WATCard. There is a 1 in 6 chance a 
+ 			 courier loses a student’s WATCard after the update. When the 
+ 			 card is lost, the exception WATCardOffice::Lost is inserted 
+ 			 into the future, rather than making the future available, 
+ 			 and the current WATCard is deleted.
+ Return: void
  *******************************************************************/
 void WATCardOffice::Courier::main() {
 	this->mOffice.mPrinter.print(Printer::Courier, this->mId, 'S');
@@ -42,6 +52,9 @@ void WATCardOffice::Courier::main() {
 	}
 } // WATCardOffice::Courier::main
 
+/***************** WATCardOffice::main **********************
+ Purpose:   The execution body of Administrator WATCardOffice.
+ ************************************************************/
 void WATCardOffice::main() {
 	for (;;) {
 		_Accept(~WATCardOffice) {
@@ -57,6 +70,9 @@ void WATCardOffice::main() {
 	} // for
 } // WATCardOffice::main
 
+/******************* WATCardOffice::WATCardOffice **********************
+ Purpose:   The constructor for administrator WATCardOffice
+ ***********************************************************************/
 WATCardOffice::WATCardOffice( Printer &prt, Bank &bank, unsigned int numCouriers )
 : mPrinter(prt), mBank(bank), mNumCouriers(numCouriers), mDone(false) {
 	this->mCouriers = new Courier* [mNumCouriers];
@@ -66,6 +82,10 @@ WATCardOffice::WATCardOffice( Printer &prt, Bank &bank, unsigned int numCouriers
 	this->mPrinter.print(Printer::WATCardOffice, 'S');
 } // WATCardOffice::WATCardOffice
 
+
+/******************* WATCardOffice::~WATCardOffice **********************
+ Purpose:   The destructor for administrator WATCardOffice
+ ***********************************************************************/
 WATCardOffice::~WATCardOffice() {
 	if (!this->mWorkRequest.empty()) {
 		this->mWorkRequest.signalBlock(); // in case there are sleeping couriers
@@ -81,6 +101,14 @@ WATCardOffice::~WATCardOffice() {
 	this->mPrinter.print(Printer::WATCardOffice, 'F');
 } // WATCardOffice::~WATCardOffice
 
+
+/***************************** WATCardOffice::create ********************************
+ Purpose:   A student performs an asynchronous call to create to create a 
+ 			“real” WATCard with an initial balance. A future WATCard is 
+ 			returned and sufficient funds are subsequently obtained from 
+ 			the bank (see Parent task) via a courier to satisfy the transfer request.
+ Return:	WATCard::FWATCard (Future WATCard)
+ ************************************************************************************/
 WATCard::FWATCard WATCardOffice::create( unsigned int sid, unsigned int amount ) {
 	WATCardOffice::Args args;
 	args.mCard = new WATCard();
@@ -93,6 +121,13 @@ WATCard::FWATCard WATCardOffice::create( unsigned int sid, unsigned int amount )
 	return job->result;
 }
 
+/***************************** WATCardOffice::transfer ********************************
+ Purpose:   A student performs an asynchronous call to transfer when its WATCard indicates 
+ 			there is insufficient funds to buy a soda. A future WATCard is returned and sufficient 
+ 			funds are subsequently obtained from the bank (see Parent task) via a courier to 
+ 			satisfy the transfer request. 
+ Return:	WATCard::FWATCard (Future WATCard)
+ ************************************************************************************/
 WATCard::FWATCard WATCardOffice::transfer( unsigned int sid, unsigned int amount, WATCard *card ) {
 	WATCardOffice::Args args;
 	args.mCard = card;
@@ -105,6 +140,11 @@ WATCard::FWATCard WATCardOffice::transfer( unsigned int sid, unsigned int amount
 	return job->result;
 } // WATCardOffice::transfer
 
+/*************************** WATCardOffice::requestWork *****************************
+ Purpose:   Each courier task calls requestWork, blocks until a Job request is ready, 
+ 			and then receives the next Job request as the result of the call.
+ Return:	WATCardOffice::Job*
+ ************************************************************************************/
 WATCardOffice::Job * WATCardOffice::requestWork() {
 	if (this->mDone == false && this->mJobs.empty()) {
 		this->mWorkRequest.wait();	
