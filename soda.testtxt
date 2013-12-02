@@ -1,0 +1,31 @@
+TEST DOCUMENTATION
+==================
+
+
+program interface:
+------------------
+  soda [ config-file [ random-seed ] ]
+
+program interface testing output
+--------------------------------
+ 0   Script started on Sun 01 Dec 2013 08:09:12 PM EST
+ 1     a6/$ ./soda folder/
+ 2   Error: could not open input file "folder/"
+ 3     a6/$ ./soda truck.o 
+ 4   Error: file "truck.o" is corrupt.
+ 5     a6/$ ./soda truck.o 1000
+ 6   Error: file "truck.o" is corrupt.
+ 7     a6/$ ./soda soda.config -10
+ 8   Usage: ./soda [ config-file [ random-seed ] ]
+ 9     a6/$ exit
+ 10  exit
+ 11  Script done on Sun 01 Dec 2013 08:10:09 PM EST
+
+
+
+program interface testing analysis
+----------------------------------
+Our program behaviors as expected.
+  line 1: folder cant be opened
+  line 3, 5 : program cant open a corrupt file
+  line 7: invalid seed

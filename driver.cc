@@ -48,20 +48,18 @@ void uMain::main(){
     // reading arguments from argument to program
     switch (argc){
         case 3:
-            seed = (unsigned int)atol(argv[2]);
-            break;
+          seed = (unsigned int)atol(argv[2]);
         case 2:
         	configFile = argv[1];
-            break;
         default:
-            ;
+        break;
     } // switch
     if ((int)seed <= 0) {
         usage();
     }
     ConfigParms cparms;
     // set a random seed to generator
-    RANDOM.seed(seed);
+    RANDOM.seed(seed);          
     processConfigFile(configFile.c_str(), cparms);
 
     Printer printer(cparms.numStudents, cparms.numVendingMachines, cparms.numCouriers);
