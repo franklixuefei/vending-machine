@@ -5,9 +5,13 @@ u++ main.cc &> /dev/null
 make &> /dev/null
 echo "test started... will run ${numtests} tests"
 counter=0
-for (( k = 0; k < ${numtests}; k++ )); do
+for (( k = 1; k < ${numtests}; k++ )); do
     ./a.out > currentConfigFile.txt
     ./soda currentConfigFile.txt ${k} &> result.txt
+    if [ $? -ne 0 ]; then
+        echo "test failed with seed ${k}"
+        exit 1;
+    fi
     echo "current seed: ${k}" > seed.txt
     x=`egrep -ci "***********************" result.txt`;
     y=`egrep -ci "assertion" result.txt`;
