@@ -50,7 +50,7 @@ void Printer::_printHeader(){
  Purpose:   translatable how many time need to print for each Kind
  return:  number of time (unsigned int)
  ******************************************************/
-unsigned int Printer::_upperRangTranslation(unsigned int kind){
+unsigned int Printer::_upperRangTranslation(unsigned int k){
   switch (k){
     case ((unsigned int) Printer::Student):
       return mNumStudents;

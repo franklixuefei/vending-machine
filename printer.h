@@ -23,7 +23,7 @@ private:
   void _flashMap(bool isDotFlash = false);
   void _insertData();
   bool _canInsertData();
-  unsigned int _upperRangTranslation(unsigned int kind);
+  unsigned int _upperRangTranslation(unsigned int k);
 
 	unsigned int mNumStudents;
 	unsigned int mNumVendingMachines;
