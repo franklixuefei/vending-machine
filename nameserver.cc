@@ -2,8 +2,8 @@
 
 
 
-/***************** NameServer::main ****************
- Purpose:   since NameServer is a Task it has to have a main
+/***************** NameServer::main ********************
+ Purpose:   The execution body of Administrator NameServer.
  ******************************************************/
 void NameServer::main() {
   for(;;){
@@ -16,7 +16,8 @@ void NameServer::main() {
     } or _Accept (getMachineList) {
     } or _Accept (getMachine) {
       // shift the student to the next machine
-      mStudentVendingMachineID[mLastVisitedStudent] = (mStudentVendingMachineID[mLastVisitedStudent]+1) % mNumVendingMachines;
+      mStudentVendingMachineID[mLastVisitedStudent] = 
+      (mStudentVendingMachineID[mLastVisitedStudent]+1) % mNumVendingMachines;
 
     } 
 
@@ -60,17 +61,17 @@ NameServer::~NameServer(){
 
 /***************** NameServer::VMregister ****************
  Purpose:   register the vending machine for student purchase
- return:  void
+ return:    void
  ******************************************************/
 void NameServer::VMregister( VendingMachine *vendingmachine ) {
   mPrt.print(Printer::NameServer, 'R', mCurrentVendingMachineCounter );
   mMachineList[mCurrentVendingMachineCounter] = vendingmachine;
 }
 
-/***************** NameServer::getMachine ****************
- Purpose:   get the vending machine student should be using
- return:  the vending machine (VendingMachine *)
- ******************************************************/
+/***************** NameServer::getMachine ******************
+ Purpose:   get the vending machine a student should be using
+ return:    the vending machine (VendingMachine *)
+ **********************************************************/
 VendingMachine *NameServer::getMachine( unsigned int id ) {
   mPrt.print(Printer::NameServer, 'N', id, mStudentVendingMachineID[id]);
   mLastVisitedStudent = id;
@@ -80,9 +81,9 @@ VendingMachine *NameServer::getMachine( unsigned int id ) {
 }
 
 /***************** NameServer::getMachineList ****************
- Purpose:   get a list of machine
- return:  the list of machine (VendingMachine *)
- ******************************************************/
+ Purpose:   get a list of vending machines
+ return:    the list of machine (VendingMachine *)
+ ************************************************************/
 VendingMachine **NameServer::getMachineList() {
   return mMachineList;
 }

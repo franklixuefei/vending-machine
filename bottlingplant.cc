@@ -5,7 +5,7 @@
 
 /***************** BottlingPlant::main ****************
  Purpose:   since BottlingPlant is a task it has to have a main
- return:  void
+ return:  	void
  ******************************************************/
 void BottlingPlant::main() {
 	this->mPrinter.print(Printer::BottlingPlant, 'S');
@@ -29,7 +29,7 @@ void BottlingPlant::main() {
 
 /***************** BottlingPlant::_calcTotalProd ****************
  Purpose:   calculate the amount it should be produced
- return:  the amount (unsigned int)
+ return:  	the amount (unsigned int)
  ******************************************************/
 unsigned int BottlingPlant::_calcTotalProd() {
 	unsigned int tot = 0;
@@ -43,21 +43,19 @@ unsigned int BottlingPlant::_calcTotalProd() {
  Purpose:   the constructor
  ******************************************************/
 BottlingPlant::BottlingPlant( Printer &prt, NameServer &nameServer, unsigned int numVendingMachines,
-                 unsigned int maxShippedPerFlavour, unsigned int maxStockPerFlavour,
-                 unsigned int timeBetweenShipments )
-	: mPrinter(prt), 
-	mNameServer(nameServer),
-	mNumVendingMachines(numVendingMachines), 
-	mMaxShippedPerFlavour(maxShippedPerFlavour), 
-	mMaxStockPerFlavour(maxStockPerFlavour), 
-	mTimeBetweenShipments(timeBetweenShipments), 
-	mPlantClosingDown(false), 
-	truck(new Truck(prt, nameServer, *this, numVendingMachines, maxStockPerFlavour)), 
-	truckShouldDestroy(false) {
-		
-		for (unsigned int i = 0; i < 4; ++i) {
-			this->mCurrentProdRun[i] = 0;
-		}
+         unsigned int maxShippedPerFlavour, unsigned int maxStockPerFlavour,
+         unsigned int timeBetweenShipments )
+: mPrinter(prt), 
+mNameServer(nameServer),
+mNumVendingMachines(numVendingMachines), 
+mMaxShippedPerFlavour(maxShippedPerFlavour), 
+mMaxStockPerFlavour(maxStockPerFlavour), 
+mTimeBetweenShipments(timeBetweenShipments), 
+mPlantClosingDown(false), 
+truck(new Truck(prt, nameServer, *this, numVendingMachines, maxStockPerFlavour)), truckShouldDestroy(false) {
+	for (unsigned int i = 0; i < 4; ++i) {
+		this->mCurrentProdRun[i] = 0;
+	}
 }
 
 /***************** BottlingPlant::~BottlingPlant ****************

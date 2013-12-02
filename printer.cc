@@ -1,7 +1,7 @@
 #include "printer.h"
 
-/***************** Printer::main ****************
- Purpose:   since this is a comonitor it has to have main
+/***************** Printer::main **********************
+ Purpose:   Coroutine main of Cormonitor Printer
  ******************************************************/
 void Printer::main() {
   _printHeader();
@@ -48,7 +48,7 @@ void Printer::_printHeader(){
 
 /***************** Printer::_upperRangTranslation ****************
  Purpose:   translatable how many time need to print for each Kind
- return:  number of time (unsigned int)
+ return:    number of time (unsigned int)
  ******************************************************/
 unsigned int Printer::_upperRangTranslation(unsigned int k){
   switch (k){
@@ -65,7 +65,7 @@ unsigned int Printer::_upperRangTranslation(unsigned int k){
 
 /***************** Printer::_flashMap ****************
  Purpose:   print the contain of map and clears it
- return:  void
+ return:    void
  ******************************************************/
 void Printer::_flashMap(bool isDotFlash){
   // goes though 8 kind of value

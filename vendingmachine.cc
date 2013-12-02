@@ -8,45 +8,44 @@ void VendingMachine::main() {
     mPrt.print(Printer::Vending, mId, 'S', mSodaCost);
     mNameServer.VMregister(this);
     for( ;; ) {
-    _Accept( ~VendingMachine ){
-      break;
-    } or _Accept( buy ) {
-    } or _Accept( inventory ){
-      mPrt.print( Printer::Vending, mId, 'r' );
-      _Accept( restocked ){
-        mPrt.print(Printer::Vending, mId, 'R' );
-      }
-    }
-  }
-
-}
+        _Accept( ~VendingMachine ){
+            break;
+        } or _Accept( buy ) {
+        } or _Accept( inventory ){
+            mPrt.print( Printer::Vending, mId, 'r' );
+            _Accept( restocked ){
+                mPrt.print(Printer::Vending, mId, 'R' );
+            } // _Accept
+        } // _Accept
+    } // for
+} // VendingMachine::main
 
 
 
 /***************** VendingMachine::VendingMachine ****************
  Purpose:   constructor 
- ******************************************************/
+ ****************************************************************/
 VendingMachine::VendingMachine( Printer &prt, NameServer &nameServer, unsigned int id, unsigned int sodaCost,
-                    unsigned int maxStockPerFlavour )
-    : mPrt(prt), 
-    mNameServer(nameServer), 
-    mId(id), 
-    mSodaCost(sodaCost), 
-    mMaxStockPerFlavour(maxStockPerFlavour),
-    mStocksLevel(new unsigned int[4]) {
-      for (unsigned int i = 0; i < 4; ++i) {
+                               unsigned int maxStockPerFlavour )
+: mPrt(prt), 
+mNameServer(nameServer), 
+mId(id), 
+mSodaCost(sodaCost), 
+mMaxStockPerFlavour(maxStockPerFlavour),
+mStocksLevel(new unsigned int[4]) {
+    for (unsigned int i = 0; i < 4; ++i) {
         mStocksLevel[i] = 0;
-      }
-}
+    } // for
+} // VendingMachine::VendingMachine
 
 
 /***************** VendingMachine::~VendingMachine ****************
  Purpose:   destructor
  ******************************************************/
 VendingMachine::~VendingMachine() {
-  mPrt.print(Printer::Vending, mId, 'F' );
-  delete[] mStocksLevel;
-}
+    mPrt.print(Printer::Vending, mId, 'F' );
+    delete[] mStocksLevel;
+} // VendingMachine::~VendingMachine
 
 
 /*****************  vendingmachine::buy ****************
@@ -55,16 +54,16 @@ VendingMachine::~VendingMachine() {
  ******************************************************/
 
 VendingMachine::Status VendingMachine::buy( Flavours flavour, WATCard &card ) {
-  if( mStocksLevel[ flavour ] <= 0 ) {
-    return STOCK;
-  }else if( card.getBalance() < mSodaCost ) {
-    return FUNDS;
-  }
-  card.withdraw( mSodaCost );
-  mStocksLevel[ flavour ] -= 1;
-  mPrt.print( Printer::Vending, mId, 'B', flavour, mStocksLevel[ flavour ] );
-  return BUY;
-}
+    if( mStocksLevel[ flavour ] <= 0 ) {
+        return STOCK;
+    }else if( card.getBalance() < mSodaCost ) {
+        return FUNDS;
+    } // if
+    card.withdraw( mSodaCost );
+    mStocksLevel[ flavour ] -= 1;
+    mPrt.print( Printer::Vending, mId, 'B', flavour, mStocksLevel[ flavour ] );
+    return BUY;
+} // VendingMachine::buy
 
 
 /***************** VendingMachine::inventory ****************
@@ -72,15 +71,15 @@ VendingMachine::Status VendingMachine::buy( Flavours flavour, WATCard &card ) {
  return:   the inventory (unsigned int*)
  ******************************************************/
 unsigned int * VendingMachine::inventory() {
-  return mStocksLevel;
-}
+    return mStocksLevel;
+} // VendingMachine::inventory
 
 /***************** vendingmachine::restocked ****************
  Purpose:   tell vending it has been restocked
  return:  void
  ******************************************************/
 void VendingMachine::restocked() {
-}
+} // VendingMachine::restocked
 
 
 /***************** vendingmachine::cost ****************
@@ -88,13 +87,13 @@ void VendingMachine::restocked() {
  return:  the price (unsigned int)
  ******************************************************/
 _Nomutex unsigned int VendingMachine::cost() {
-  return mSodaCost;
-}
+    return mSodaCost;
+} // VendingMachine::cost
 
 /***************** VendingMachine::getId ****************
  Purpose:   get the id of current vending machine
  return:  the vending machine id (unsigned int)
  ******************************************************/
 _Nomutex unsigned int VendingMachine::getId() {
-  return mId;
-}
+    return mId;
+} // VendingMachine::getId
