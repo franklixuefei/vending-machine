@@ -1,25 +1,32 @@
 #include "vendingmachine.h"
 
 /***************** vendingmachine::main ****************
- Purpose:   since vending machine is a Task it has to have a main
- return:  void
+ Purpose:   
+ 	- A vending machine’s function is to sell soda to students at some cost.
+
+	• start message
+	• register current vending machine to name server
+	• loop
+	• finished message
+ 
+ Returns:   void
  ******************************************************/
 void VendingMachine::main() {
     mPrt.print(Printer::Vending, mId, 'S', mSodaCost);
     mNameServer.VMregister(this);
     for( ;; ) {
-        _Accept( ~VendingMachine ){
+        _Accept( ~VendingMachine ) {
             break;
         } or _Accept( buy ) {
-        } or _Accept( inventory ){
+        } or _Accept( inventory ) {
             mPrt.print( Printer::Vending, mId, 'r' );
-            _Accept( restocked ){
+            _Accept( restocked ) {
                 mPrt.print(Printer::Vending, mId, 'R' );
             } // _Accept
         } // _Accept
     } // for
+    mPrt.print(Printer::Vending, mId, 'F' );
 } // VendingMachine::main
-
 
 
 /***************** VendingMachine::VendingMachine ****************
@@ -43,7 +50,6 @@ mStocksLevel(new unsigned int[4]) {
  Purpose:   destructor
  ******************************************************/
 VendingMachine::~VendingMachine() {
-    mPrt.print(Printer::Vending, mId, 'F' );
     delete[] mStocksLevel;
 } // VendingMachine::~VendingMachine
 

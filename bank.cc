@@ -26,7 +26,7 @@ void Bank::deposit( unsigned int id, unsigned int amount ){
 } // Bank::deposit
 
 
-/********************************** Bank::deposit *********************************
+/********************************** Bank::withdraw ********************************
  Purpose:   A courier calls withdraw to transfer money on behalf of the 
  			WATCard office for a specific student. The courier waits until enough 
  			money has been deposited, which may require multiple deposits.

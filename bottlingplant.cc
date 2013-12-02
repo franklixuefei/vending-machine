@@ -53,8 +53,8 @@ unsigned int BottlingPlant::_calcTotalProd() {
 } // BottlingPlant::_calcTotalProd
 
 /***************** BottlingPlant::BottlingPlant ****************
- Purpose:   the constructor
- ******************************************************/
+ Purpose:   the constructor of Task BottlingPlant
+ ***************************************************************/
 BottlingPlant::BottlingPlant( Printer &prt, NameServer &nameServer, unsigned int numVendingMachines,
          unsigned int maxShippedPerFlavour, unsigned int maxStockPerFlavour,
          unsigned int timeBetweenShipments )
@@ -72,8 +72,8 @@ truck(new Truck(prt, nameServer, *this, numVendingMachines, maxStockPerFlavour))
 } // BottlingPlant::BottlingPlant
 
 /***************** BottlingPlant::~BottlingPlant ****************
- Purpose:   the destructor
- ******************************************************/
+ Purpose:   the destructor of Task BottlingPlant
+ ****************************************************************/
 BottlingPlant::~BottlingPlant() {
 	delete truck;
 } // BottlingPlant::~BottlingPlant

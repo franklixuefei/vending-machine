@@ -19,15 +19,13 @@ void NameServer::main() {
             mStudentVendingMachineID[mLastVisitedStudent] =
             (mStudentVendingMachineID[mLastVisitedStudent]+1) % mNumVendingMachines;
             
-        }
-        
-    }
-    
-}
+        } // _Accept
+    } // for
+} // NameServer::main
 
 
 /***************** NameServer::NameServer ****************
- Purpose:   the constructor
+ Purpose:   the constructor of administrator NameServer
  ******************************************************/
 NameServer::NameServer( Printer &prt, unsigned int numVendingMachines, unsigned int numStudents )
 :mPrt(prt),
@@ -36,27 +34,25 @@ mNumStudents(numStudents),
 mMachineList(new VendingMachine*[numVendingMachines]),
 mStudentVendingMachineID(new unsigned int[mNumStudents]),
 mCurrentVendingMachineCounter(0) {
-    
     mPrt.print(Printer::NameServer, 'S' );
     // assign each student to a machine
     for (unsigned int i = 0; i < mNumStudents; ++i) {
         mStudentVendingMachineID[i] = (i)%mNumVendingMachines;
-    }
+    } // for
     // clear the array for placing vending machine
     for (unsigned int i = 0; i < numVendingMachines; ++i) {
         mMachineList[i] = NULL;
-    }
-    
-}
+    } // for
+} // NameServer::NameServer
 
 /***************** NameServer::~NameServer ****************
- Purpose:   the destructor
+ Purpose:   the destructor of administrator NameServer
  ******************************************************/
 NameServer::~NameServer(){
     mPrt.print(Printer::NameServer, 'F' );
     delete[] mMachineList;
     delete[] mStudentVendingMachineID;
-}
+} // NameServer::~NameServer
 
 
 /***************** NameServer::VMregister ****************
@@ -66,7 +62,7 @@ NameServer::~NameServer(){
 void NameServer::VMregister( VendingMachine *vendingmachine ) {
     mPrt.print(Printer::NameServer, 'R', mCurrentVendingMachineCounter );
     mMachineList[mCurrentVendingMachineCounter] = vendingmachine;
-}
+} // NameServer::VMregister
 
 /***************** NameServer::getMachine ******************
  Purpose:   get the vending machine a student should be using
@@ -78,7 +74,7 @@ VendingMachine *NameServer::getMachine( unsigned int id ) {
     VendingMachine * vm = mMachineList[mStudentVendingMachineID[id]];
     assert(vm != NULL);
     return vm;
-}
+} // NameServer::getMachine
 
 /***************** NameServer::getMachineList ****************
  Purpose:   get a list of vending machines
@@ -86,6 +82,6 @@ VendingMachine *NameServer::getMachine( unsigned int id ) {
  ************************************************************/
 VendingMachine **NameServer::getMachineList() {
     return mMachineList;
-}
+} // NameServer::getMachineList
 
 

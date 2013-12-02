@@ -157,9 +157,6 @@ void Printer::_flashMap(bool isDotFlash){
  return:  void
  ******************************************************/
 void Printer::_insertData(){
-    
-    
-    // FIXME: THE BUG
     static int counter = 0;
     static char last_State = mState;
     if (last_State != mState) {
@@ -167,18 +164,8 @@ void Printer::_insertData(){
         last_State= mState;
     }else{
         counter++;
-        if (counter > 200)
-        {
-            exit(1);
-        }
+        if (counter > 200) exit(1);
     }
-    
-    
-    
-    
-    
-    
-    
     
     if (mDataMap.find(mKind) == mDataMap.end()) {
         // if the kind entry doesnt exist in the map

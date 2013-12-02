@@ -16,7 +16,7 @@ WATCardOffice::Courier::~Courier() {
 } // Courier::~Courier
 
 
-/***************** WATCardOffice::Courier::Courier ****************
+/****************** WATCardOffice::Courier::main *******************
  Purpose:   the execution body of Task Courier.
  			The WATCard office is empowered to transfer funds from a 
  			student’s bank-account to its WATCard by sending a request 
@@ -119,7 +119,7 @@ WATCard::FWATCard WATCardOffice::create( unsigned int sid, unsigned int amount )
 	this->mWorkRequest.signal(); // signal Courier for new job available
 	this->mPrinter.print(Printer::WATCardOffice, 'C', (int)sid, (int)amount);
 	return job->result;
-}
+} // WATCardOffice::create
 
 /***************************** WATCardOffice::transfer ********************************
  Purpose:   A student performs an asynchronous call to transfer when its WATCard indicates 
