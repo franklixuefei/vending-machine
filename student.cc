@@ -37,9 +37,9 @@ void Student::main() {
 			default:
 				// impossible.
 				;
-		}
-	}
-}
+		} // switch
+	} // for
+} // Student::main
 
 Student::Student( Printer &prt, NameServer &nameServer, 
 	WATCardOffice &cardOffice, unsigned int id, unsigned int maxPurchases )
@@ -48,6 +48,6 @@ Student::Student( Printer &prt, NameServer &nameServer,
 Student::~Student() {
 	mPrinter.print(Printer::Student, this->mId, 'F');
 	delete this->mCard;
-}
+} // Student::~Student
 
 #endif

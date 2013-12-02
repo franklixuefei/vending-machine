@@ -8,7 +8,7 @@ void Truck::main() {
 		yield(RANDOM(1,10));
 		if (mPlant.getShipment(mCargo)) {
 			break;
-		}
+		} // if
 
 		mPrinter.print(Printer::Truck, 'P', this->_calcTotalCargoNum());
 

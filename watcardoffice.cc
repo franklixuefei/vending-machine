@@ -109,6 +109,9 @@ WATCardOffice::Job * WATCardOffice::requestWork() {
 	if (this->mDone == false && this->mJobs.empty()) {
 		this->mWorkRequest.wait();	
 	} // if
+	// after waking up, if the program is terminating, wake
+	// up other sleeping Couriers. Otherwise, pop a job from
+	// job queue and return it to Courier.
 	if (this->mDone) {
 		this->mWorkRequest.signal();
 		return NULL;

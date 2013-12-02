@@ -24,7 +24,7 @@ using namespace std;
 void usage(string s = "./soda [ config-file [ random-seed ] ]") {
   cerr << "Usage: " << s << endl;
   exit(1);
-}
+} // usage
 
 /********************** error *************************
  Purpose:   prints out the error message and terminates
@@ -35,18 +35,27 @@ void usage(string s = "./soda [ config-file [ random-seed ] ]") {
 void error(string s = "") {
   cerr << "Error: " << s << endl;
   exit(1);
-}
+} // error
 
 /* global variable */
 MPRNG RANDOM;
 
 
+/********************** uMain::main *************************
+ Purpose:   the driver for Vending Machine problem. This method
+            parses the command line input, process config file,
+            handles error input, creates Printer, Bank, Parent,
+            WATCardOffice, NameServer, VendingMachines, 
+            BottlingPlant, and Students.
+ 
+ Returns:   void
+ ************************************************************/
 void uMain::main(){
   // creating init values
     string configFile = "soda.config";
     unsigned int seed = getpid();
     // reading arguments from argument to program
-    switch (argc){
+    switch (argc) {
         case 3:
           seed = (unsigned int)atol(argv[2]);
         case 2:
@@ -56,7 +65,7 @@ void uMain::main(){
     } // switch
     if ((int)seed <= 0) {
         usage();
-    }
+    } // if
     ConfigParms cparms;
     // set a random seed to generator
     RANDOM.seed(seed);          
@@ -75,15 +84,15 @@ void uMain::main(){
     Student * students[cparms.numStudents];
     for (unsigned int i = 0; i < cparms.numStudents; ++i) {
         students[i] = new Student(printer, ns, wco, i, cparms.maxPurchases);
-    }
+    } // for
 
     for (unsigned int i = 0; i < cparms.numStudents; ++i) {
         delete students[i];
-    }
+    } // for
     delete botPlant;
     for (unsigned int i = 0; i < cparms.numVendingMachines; ++i) {
         delete vms[i];
-    }
+    } // for
     
     uRetCode = 0;
-}
+} // uMain::main

@@ -30,7 +30,7 @@ void BottlingPlant::main() {
 /***************** BottlingPlant::_calcTotalProd ****************
  Purpose:   calculate the amount it should be produced
  return:  	the amount (unsigned int)
- ******************************************************/
+ ****************************************************************/
 unsigned int BottlingPlant::_calcTotalProd() {
 	unsigned int tot = 0;
 	for (unsigned int i = 0; i < 4; ++i) {
