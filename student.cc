@@ -51,7 +51,7 @@ void Student::main() {
 		try {
 			this->mCard = fWATCard();
 		} catch(WATCardOffice::Lost e) {
-			this->mPrinter.print(Printer::Student, 'L');
+			this->mPrinter.print(Printer::Student, mId, 'L');
 			fWATCard = mCardOffice.create(this->mId, 5);
 			goto RETRY_GET_CARD;
 		} // try-catch block

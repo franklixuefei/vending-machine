@@ -263,4 +263,9 @@ Output analysis:
   Vending machine 1: On line 19-23, We can see that Vending machine 0 was restocking
   and no one was able to buy anything from that machine until it finished restocking it.
   Since Vending machine 2, 3 were never re-stocked. Students would skip and go to the next machine.
+  
+  Students 0 was buying drink form V0 and it was re-stocking (Line 12-15), it moved to vending machine 1.
+  since Vending machine 1 was not stock. The student moved to V2 and lastly back to V0. Which is the
+  correct behavior. Same for student 1.
 
+  
