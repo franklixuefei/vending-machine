@@ -13,13 +13,12 @@ void NameServer::main() {
       // after it has been registered it will increase the current counter
       mCurrentVendingMachineCounter ++;
 
+    } or _Accept (getMachineList) {
     } or _Accept (getMachine) {
       // shift the student to the next machine
       mStudentVendingMachineID[mLastVisitedStudent] = (mStudentVendingMachineID[mLastVisitedStudent]+1) % mNumVendingMachines;
 
-    } or _Accept (getMachineList) {
-
-    }
+    } 
 
   }
 

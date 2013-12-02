@@ -1,0 +1,22 @@
+Script started on Mon 02 Dec 2013 01:55:08 AM EST
+x284li@linux028:~/cs343/a6$ time ./runTest.sh
+test started... will run 50000 tests
+5000 tests run
+10000 tests run
+15000 tests run
+20000 tests run
+25000 tests run
+30000 tests run
+35000 tests run
+40000 tests run
+45000 tests run
+50000 tests run
+all tests passed!
+
+real	369m8.333s
+user	312m55.630s
+sys	22m55.330s
+x284li@linux028:~/cs343/a6$ exit
+exit
+
+Script done on Mon 02 Dec 2013 11:28:04 AM EST

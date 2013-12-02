@@ -79,7 +79,7 @@ void Printer::_flashMap(bool isDotFlash){
         // for the kind k find how many of those possible value could exits
         unsigned int times = _upperRangTranslation(k);
         // print that many kind 
-        for (int i = 0; i < times; ++i) {
+        for (unsigned int i = 0; i < times; ++i) {
           if (mDataMap[k].find(i) != mDataMap[k].end()){
             // output the char
             cout << mDataMap[k][i].first;
@@ -124,7 +124,7 @@ void Printer::_flashMap(bool isDotFlash){
           k == ((unsigned int) Printer::Vending) || 
           k == ((unsigned int) Printer::Courier) ) {
         unsigned int times = _upperRangTranslation(k);
-        for (int i = 0; i < times; ++i) {
+        for (unsigned int i = 0; i < times; ++i) {
           cout << "...";
           cout << "\t";
         }
@@ -138,7 +138,7 @@ void Printer::_flashMap(bool isDotFlash){
           k == ((unsigned int) Printer::Vending) || 
           k == ((unsigned int) Printer::Courier) ) {
         unsigned int times = _upperRangTranslation (k);
-        for (int i = 0; i < times; ++i) {
+        for (unsigned int i = 0; i < times; ++i) {
           cout << "\t";
         }
       }else{

@@ -1,0 +1,9 @@
+SodaCost			11
+NumStudents		30
+MaxPurchases		1
+NumVendingMachines	21
+MaxStockPerFlavour	3
+MaxShippedPerFlavour	5
+TimeBetweenShipments	2
+ParentalDelay		8
+NumCouriers		3

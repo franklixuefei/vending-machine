@@ -17,10 +17,6 @@ void WATCardOffice::Courier::main() {
 	for (;;) {
 		Job* job = this->mOffice.requestWork();
 		if (!job) {
-		cerr << "courier id " << this->mId << " ==================" << endl;
-			
-
-
 			break;
 		}
 		this->mOffice.mPrinter.print(Printer::Courier, this->mId, 't', (int)job->args.mId, (int)job->args.mTransAmount);
