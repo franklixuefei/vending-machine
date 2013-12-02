@@ -2,30 +2,265 @@ TEST DOCUMENTATION
 ==================
 
 
-program interface:
-------------------
-  soda [ config-file [ random-seed ] ]
+program interface
+-----------------
+      soda [ config-file [ random-seed ] ]
 
 program interface testing output
---------------------------------
- 0   Script started on Sun 01 Dec 2013 08:09:12 PM EST
- 1     a6/$ ./soda folder/
- 2   Error: could not open input file "folder/"
- 3     a6/$ ./soda truck.o 
- 4   Error: file "truck.o" is corrupt.
- 5     a6/$ ./soda truck.o 1000
- 6   Error: file "truck.o" is corrupt.
- 7     a6/$ ./soda soda.config -10
- 8   Usage: ./soda [ config-file [ random-seed ] ]
- 9     a6/$ exit
- 10  exit
- 11  Script done on Sun 01 Dec 2013 08:10:09 PM EST
+   0   Script started on Sun 01 Dec 2013 08:09:12 PM EST
+   1     a6/$ ./soda folder/
+   2   Error: could not open input file "folder/"
+   3     a6/$ ./soda truck.o 
+   4   Error: file "truck.o" is corrupt.
+   5     a6/$ ./soda truck.o 1000
+   6   Error: file "truck.o" is corrupt.
+   7     a6/$ ./soda soda.config -10
+   8   Usage: ./soda [ config-file [ random-seed ] ]
+   9     a6/$ exit
+   10  exit
+   11  Script done on Sun 01 Dec 2013 08:10:09 PM EST
 
 
 
-program interface testing analysis
-----------------------------------
-Our program behaviors as expected.
-  line 1: folder cant be opened
-  line 3, 5 : program cant open a corrupt file
-  line 7: invalid seed
+program interface testing analysis:
+  Our program behaviors as expected. Warning message was displayed for 
+  each test cases
+    line 1: folder cant be opened
+    line 3, 5 : program cant open a corrupt file
+    line 7: invalid seed
+
+
+
+
+DeadLock test:
+--------------
+First we create a random config file generator:
+
+    0    #include <iostream>
+    1    #include <unistd.h>
+    2    #include <cstdlib>
+    3    using namespace std;
+    4    class MPRNG {
+    5      public:
+    6        MPRNG( unsigned int seed = 1009 ) { srand( seed ); }// set seed
+    7        void seed( unsigned int seed ) { srand( seed ); } // set seed
+    8        unsigned int operator()() { return rand(); }  // [0,UINT_MAX]
+    9        unsigned int operator()( unsigned int u ) { return operator()() % (u + 1); } // [0,u]
+    10        unsigned int operator()( unsigned int l, unsigned int u ) { return operator()( u - l ) + l; }
+    11    };
+    12    MPRNG RAND;
+    13    class output
+    14    {
+    15    public:
+    16      output(){
+    17          cout << "SodaCost\t"<<                RAND(1,2)   <<endl ;
+    18          cout << "NumStudents\t"<<             RAND(1,4)   <<endl ;
+    19          cout << "MaxPurchases\t"<<            RAND(1,8)   <<endl ;
+    20          cout << "NumVendingMachines\t"<<      RAND(1,3)   <<endl ;
+    21          cout << "MaxStockPerFlavour\t"<<      RAND(1,5)   <<endl ;
+    22          cout << "MaxShippedPerFlavour\t"<<    RAND(1,3)   <<endl ;
+    23          cout << "TimeBetweenShipments\t"<<    RAND(1,3)   <<endl ;
+    24          cout << "ParentalDelay\t"<<           RAND(1,2)   <<endl ;
+    25          cout << "NumCouriers\t"<<             RAND(1,8)   <<endl ;
+    26      }
+    27      ~output(){};
+    28    
+    29    };
+    30    
+    31    int main(int argc, char **argv) {
+    32      RAND.seed(getpid());
+    33      delete new output();
+    34    }
+
+
+Compiled it with 
+    g++ main.cc
+
+
+After creating config file binary we wrote a test bash script for running our binary 50000 times:
+
+
+    0   #!/bin/bash
+    1   
+    2   echo "SCRIPT INT STARTED"
+    3   counter=0
+    4   for k in {1..100000}; do
+    5       ./soda soda.config ${k} &> result.txt
+    6               
+    7       y=`egrep -ci "assertion" result.txt`;
+    8   
+    9       z=`egrep -ci "deadlock" result.txt`;
+    10    
+    11        if [ ${y} -ne 0 ] || [ ${z} -ne 0 ]; then
+    12        echo "test failed"
+    13             exit 1;
+    14        fi
+    15        counter=$((${counter}+1))
+    16        #if [ $((${counter} % 5)) -eq 0 ]; then
+    17        echo "passed ${counter}"
+    18        # fi
+    19    done
+    20    echo "ALL TEST SUCCESSFULLY PASSED!"
+    21    make clean &> /dev/null
+    22    exit 0
+
+
+Out put of the bash script:
+    0     Script started on Mon 02 Dec 2013 01:55:08 AM EST
+    1     x284li@linux028:~/cs343/a6$ time ./runTest.sh
+    2     test started... will run 50000 tests
+    3     5000 tests run
+    4     10000 tests run
+    5     15000 tests run
+    6     20000 tests run
+    7     25000 tests run
+    8     30000 tests run
+    9     35000 tests run
+    10    40000 tests run
+    11    45000 tests run
+    12    50000 tests run
+    13    all tests passed!
+    14    
+    15    real  369m8.333s
+    16    user  312m55.630s
+    17    sys 22m55.330s
+    18    x284li@linux028:~/cs343/a6$ exit
+    19    exit
+    20    
+    21    Script done on Mon 02 Dec 2013 11:28:04 AM EST
+
+From our test result we can conclude that our binary doesn't have deadlock with in those 50000 runs.
+
+
+Output analysis:
+This is our output of our binary with give config file. 
+
+0       Parent  WATOff  Names   Truck   Plant   Stud0   Stud1   Mach0   Mach1   Mach2   Cour0
+1       ******* ******* ******* ******* ******* ******* ******* ******* ******* ******* *******
+2       S       S       S                                       S2                      S
+3       D0,2            R0              S       S0,8    S3,8            S2      S2
+4       D0,2    C0,5    R1              G5                                              t0,5
+5       D0,1    C1,5    R2      S                                                       T0,5
+6       D1,3    W       N0,0                                                            t1,5
+7       D0,3            N1,1
+8       D1,1                    P5
+9                               d0,5
+10      D0,1                    U0,15   P                       r
+11      D1,2    W               D0,0    G2                      R                       T1,5
+12                              P2              B3              B0,0
+13      D1,2            N1,2    d0,2    P               V2
+14      D1,1                    U0,14                           r
+15      D0,1            N0,1    D0,0    G6      V1              R
+16      D0,2            N1,0                            V0
+17      D0,2                    P6
+18                              d0,6
+19      D0,1                    U0,9    P                       r
+20                              D0,1
+21                              d1,1
+22      D1,1                    U1,19   G6                      R       r
+23                      N1,1    D1,0                    B3      B3,0
+24      D1,1            N0,2                    V2      V1              R
+25      D1,3
+26      D0,3
+27      D0,1            N1,2                            V2
+28      D0,3            N0,0    P6              V0
+29                              d0,6
+30      D0,1                    U0,6    P                       r
+31                              D0,2
+32                              d1,2
+33      D1,1            N1,0    U1,17   G5              V0      R       r
+34      D0,2                    D1,0            B1              B0,4    R
+35      D0,1                    P5
+36                              d0,5
+37      D0,1                    U0,5    P                       r
+38                              D0,3
+39                              d1,3
+40      D1,1    T0,7            U1,14   G8                      R       r
+41                              D1,0                                                    t0,7
+42      D1,3    W                                       B1      B3,0    R               T0,7
+43      D1,2                                    B6              B0,3
+44      ...     ...     ...     ...     ...     F       ...     ...     ...     ...     ...
+45      D0,2
+46      D0,1                    P8
+47                              d0,8
+48      D1,2                    U0,2    P                       r
+49                              D0,3
+50                              d1,3
+51      D0,2    T1,7            U1,11   G7                      R       r
+52      D1,2                    D1,0                                                    t1,7
+53      D1,3    C1,5                            L                       R               T1,7
+54                                                                                      t1,5
+55      D0,3    W                                       B3      B3,2                    T1,5
+56      D1,3
+57      D1,1                    P7
+58      D1,3                    d0,7    P                       r
+59                              D0,4
+60                              d1,4
+61      D0,2                    U1,8    G2                      R       r
+62                              D1,1                    B1      B3,4
+63                              d2,1
+64      D1,1                    U2,19                                   R       r
+65      D1,3                    D2,0                                            R
+66      D1,1
+67      D0,2    T1,7            P2
+68                              d0,2                                                    t1,7
+69      D1,2    C1,5                    P       L               r                       T1,7
+70      D1,2                    D0,1
+71                              d1,1
+72                              U1,7                                                    t1,5
+73      D0,3    C1,5            D1,0    G8      L               R       r               T1,5
+74                                                                      R               t1,5
+75      D1,3    W                                       B3      B3,4                    T1,5
+76      D0,2                    P8
+77                              d0,8
+78      D1,1                    U0,1    P                       r
+79                              D0,8
+80                              d1,8
+81      D0,3                    U1,5    G4                      R       r
+82                              D1,6
+83                              d2,6
+84      D1,1                    U2,13                   B1      B3,3    R       r
+85      D1,1    T1,7            D2,0                                            R
+86      D0,3                                                                            t1,7
+87      D0,3    W                                       B6      B3,2                    T1,7
+88      D1,3                    P4
+89                              d0,4
+90      ...     ...     ...     ...     ...     ...     F       ...     ...     ...     ...
+91      D0,1                    D0,1    P                       r
+92                              d1,1
+93      D0,2                    U1,5    G11                     R       r
+94                              D1,1
+95                              d2,1
+96      D1,2                    U2,12                                   R       r
+97      D0,2                    D2,0                                            R
+98      D0,3
+99      D1,2
+100     D1,3
+101     D0,1
+102     ...     ...     ...     F       ...     ...     ...     ...     ...     ...     ...
+103     D1,1
+104     ...     ...     ...     ...     F       ...     ...     ...     ...     ...     ...
+105     D0,2
+106     ...     ...     ...     ...     ...     ...     ...     F       ...     ...     ...
+107     D0,3
+108     ...     ...     ...     ...     ...     ...     ...     ...     F       ...     ...
+109     D0,1
+110     ...     ...     ...     ...     ...     ...     ...     ...     ...     F       ...
+111     D0,2
+112     ...     ...     F       ...     ...     ...     ...     ...     ...     ...     ...
+113     D0,1
+114     D1,2
+115     ...     ...     ...     ...     ...     ...     ...     ...     ...     ...     F
+116     ...     F       ...     ...     ...     ...     ...     ...     ...     ...     ...
+117     D1,3
+118     F       ...     ...     ...     ...     ...     ...     ...     ...     ...     ...
+119     ***********************
+
+
+
+Output analysis:
+----------------
+  Vending machine 1: On line 19-23, We can see that Vending machine 0 was restocking
+  and no one was able to buy anything from that machine until it finished restocking it.
+  Since Vending machine 2, 3 were never re-stocked. Students would skip and go to the next machine.
+
