@@ -11,8 +11,8 @@ Bank::Bank( unsigned int numStudents )
 : mNumStudents(numStudents), mSuffFund(new uCondition[mNumStudents]), mAccountBal(new int[mNumStudents]) {
 	for (unsigned int i = 0; i < mNumStudents; ++i) {
 		this->mAccountBal[i] = 0;
-	}
-}
+	} // for
+} // Bank::Bank
 
 
 /****************************** Bank::deposit *****************************
@@ -22,8 +22,8 @@ Bank::Bank( unsigned int numStudents )
 void Bank::deposit( unsigned int id, unsigned int amount ){
 	if ((this->mAccountBal[id] += amount) >= 0) {
 		this->mSuffFund[id].signal();
-	}
-}
+	} // if
+} // Bank::deposit
 
 
 /********************************** Bank::deposit *********************************
@@ -37,9 +37,9 @@ void Bank::withdraw( unsigned int id, unsigned int amount ){
 		this->mSuffFund[id].wait();
 		if (this->mAccountBal[id] >= 0) {
 			this->mSuffFund[id].signal();
-		}
-	}
-}
+		} // if
+	} // if
+} // Bank::withdraw
 
 
 /*************************** Bank::~Bank ************************
@@ -48,6 +48,6 @@ void Bank::withdraw( unsigned int id, unsigned int amount ){
 Bank::~Bank() {
 	delete [] this->mAccountBal;
 	delete [] this->mSuffFund;
-}
+} // Bank::~Bank
 
 #endif

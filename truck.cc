@@ -1,5 +1,8 @@
 #include "truck.h"
 
+/******************* Truck::main **********************
+ Purpose:   Coroutine main of Cormonitor Printer
+ ******************************************************/
 void Truck::main() {
 	VendingMachine** machineList = this->mNameServer.getMachineList();
 	mPrinter.print(Printer::Truck, 'S');
