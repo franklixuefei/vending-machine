@@ -6,53 +6,53 @@
  Purpose:   The execution body of Administrator NameServer.
  ******************************************************/
 void NameServer::main() {
-  for(;;){
-    _Accept (~NameServer) {
-      break;
-    } or _Accept (VMregister) {
-      // after it has been registered it will increase the current counter
-      mCurrentVendingMachineCounter ++;
-
-    } or _Accept (getMachineList) {
-    } or _Accept (getMachine) {
-      // shift the student to the next machine
-      mStudentVendingMachineID[mLastVisitedStudent] = 
-      (mStudentVendingMachineID[mLastVisitedStudent]+1) % mNumVendingMachines;
-    } // _Accept
-  }// for
+    for(;;){
+        _Accept (~NameServer) {
+            break;
+        } or _Accept (VMregister) {
+            // after it has been registered it will increase the current counter
+            mCurrentVendingMachineCounter ++;
+            
+        } or _Accept (getMachineList) {
+        } or _Accept (getMachine) {
+            // shift the student to the next machine
+            mStudentVendingMachineID[mLastVisitedStudent] =
+            (mStudentVendingMachineID[mLastVisitedStudent]+1) % mNumVendingMachines;
+            
+        } // _Accept
+    } // for
 } // NameServer::main
 
 
 /***************** NameServer::NameServer ****************
- Purpose:   the constructor 
+ Purpose:   the constructor of administrator NameServer
  ******************************************************/
 NameServer::NameServer( Printer &prt, unsigned int numVendingMachines, unsigned int numStudents )
-  :mPrt(prt),
-  mNumVendingMachines(numVendingMachines),
-  mNumStudents(numStudents), 
-  mMachineList(new VendingMachine*[numVendingMachines]), 
-  mStudentVendingMachineID(new unsigned int[mNumStudents]),
-  mCurrentVendingMachineCounter(0) {
-
+:mPrt(prt),
+mNumVendingMachines(numVendingMachines),
+mNumStudents(numStudents),
+mMachineList(new VendingMachine*[numVendingMachines]),
+mStudentVendingMachineID(new unsigned int[mNumStudents]),
+mCurrentVendingMachineCounter(0) {
     mPrt.print(Printer::NameServer, 'S' );
     // assign each student to a machine
     for (unsigned int i = 0; i < mNumStudents; ++i) {
-      mStudentVendingMachineID[i] = (i)%mNumVendingMachines;
+        mStudentVendingMachineID[i] = (i)%mNumVendingMachines;
     } // for
     // clear the array for placing vending machine
     for (unsigned int i = 0; i < numVendingMachines; ++i) {
         mMachineList[i] = NULL;
-    }// for
-}// NameServer::NameServer
+    } // for
+} // NameServer::NameServer
 
 /***************** NameServer::~NameServer ****************
- Purpose:   the destructor
+ Purpose:   the destructor of administrator NameServer
  ******************************************************/
 NameServer::~NameServer(){
-  mPrt.print(Printer::NameServer, 'F' );
-  delete[] mMachineList;
-  delete[] mStudentVendingMachineID;
-}// NameServer::~NameServer
+    mPrt.print(Printer::NameServer, 'F' );
+    delete[] mMachineList;
+    delete[] mStudentVendingMachineID;
+} // NameServer::~NameServer
 
 
 /***************** NameServer::VMregister ****************
@@ -60,20 +60,20 @@ NameServer::~NameServer(){
  return:    void
  ******************************************************/
 void NameServer::VMregister( VendingMachine *vendingmachine ) {
-  mPrt.print(Printer::NameServer, 'R', mCurrentVendingMachineCounter );
-  mMachineList[mCurrentVendingMachineCounter] = vendingmachine;
-}// NameServer::VMregister
+    mPrt.print(Printer::NameServer, 'R', mCurrentVendingMachineCounter );
+    mMachineList[mCurrentVendingMachineCounter] = vendingmachine;
+} // NameServer::VMregister
 
 /***************** NameServer::getMachine ******************
  Purpose:   get the vending machine a student should be using
  return:    the vending machine (VendingMachine *)
  **********************************************************/
 VendingMachine *NameServer::getMachine( unsigned int id ) {
-  mPrt.print(Printer::NameServer, 'N', id, mStudentVendingMachineID[id]);
-  mLastVisitedStudent = id;
-  VendingMachine * vm = mMachineList[mStudentVendingMachineID[id]];
-  assert(vm != NULL);
-  return vm;
+    mPrt.print(Printer::NameServer, 'N', id, mStudentVendingMachineID[id]);
+    mLastVisitedStudent = id;
+    VendingMachine * vm = mMachineList[mStudentVendingMachineID[id]];
+    assert(vm != NULL);
+    return vm;
 } // NameServer::getMachine
 
 /***************** NameServer::getMachineList ****************
@@ -81,7 +81,7 @@ VendingMachine *NameServer::getMachine( unsigned int id ) {
  return:    the list of machine (VendingMachine *)
  ************************************************************/
 VendingMachine **NameServer::getMachineList() {
-  return mMachineList;
-}// NameServer::getMachineList
+    return mMachineList;
+} // NameServer::getMachineList
 
 
