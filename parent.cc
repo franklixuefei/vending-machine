@@ -1,5 +1,10 @@
 #include "parent.h"
 
+
+/***************** Parent::main ****************
+ Purpose:   since parent is a task, it has to have a main
+ return:  void
+ ******************************************************/
 void Parent::main() {
   for (;;){
     // The parent must check for a call to its destructor to know when to terminate. 
@@ -22,13 +27,18 @@ void Parent::main() {
 }
 
 
-
+/***************** Parent::Parent ****************
+ Purpose:   the constructor 
+ ******************************************************/
 Parent::Parent( Printer &prt, Bank &bank, unsigned int numStudents, unsigned int parentalDelay )
 	: mPrt(prt), mBank(bank), mNumStudents(numStudents), mParentalDelay(parentalDelay) {
 
   mPrt.print(Printer::Parent, 'S');
 }
 
+/***************** Parent::~Parent ****************
+ Purpose:   the destructor
+ ******************************************************/
 Parent::~Parent() {
     mPrt.print(Printer::Parent, 'F');
 }
