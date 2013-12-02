@@ -1,9 +1,0 @@
-SodaCost			16
-NumStudents		21
-MaxPurchases		30
-NumVendingMachines	19
-MaxStockPerFlavour	8
-MaxShippedPerFlavour	8
-TimeBetweenShipments	4
-ParentalDelay		2
-NumCouriers		2

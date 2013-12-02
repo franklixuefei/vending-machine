@@ -22,3 +22,9 @@
 *.d
 ImplType
 soda
+
+# Test Files
+result.txt
+currentConfigFile.txt
+seed.txt
+
