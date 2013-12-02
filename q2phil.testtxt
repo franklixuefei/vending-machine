@@ -1,0 +1,471 @@
+PHIL TEST DOCUMENTATION
+=======================
+This is the simulation of the classic The Dining Philosophers problem. 
+There is a table for a group of philosophers to dine on. The table is set with N plates of spaghetti with
+one fork between adjacent plates. Consequently there is one fork on either side of a plate. Before eating, 
+a philosopher must obtain the two forks on either side of the plate; hence, two adjacent philosophers cannot 
+eat simultaneously. The host reasons that, when a philosopher’s stomach begins to growl, she can simply wait 
+until the two philosophers on either side begin thinking, then simultaneously pick up the two forks on either 
+side of her plate and begin eating. If a philosopher cannot get both forks immediately, then she must wait until 
+both are free. 
+
+USER INTERFACE TESTING
+    There is no user interface to be tested, so the testing focuses
+    solely on the algorithm and synchronization for philosophers.
+
+ALGORITHM AND SYNCHRONIZATION TESTING
+
+  TEST 1:
+  -------
+    TEST DESCRIPTION
+        This test is for testing deadlocks and assertion tests. One of the biggest issue in a concurrent program
+        is the synchronization problem, which in a great chance may cause several unexpected deadlocks.
+        And also, in order to make sure that philosophers are synchronized properly (e.g., no two adjacent
+        philosophers can eat at the same time).
+        In this test, I made a test script to run my solution 10000 times with totally random command line inputs
+        for each of the four versions of implementation.
+        Here is the script for showing the test script:
+             1  Script started on Mon 18 Nov 2013 04:32:43 PM EST
+             2  x284li@linux024:~/cs343/a5$ cat runTest.sh
+             3  #!/bin/bash
+               
+             4  echo "test started..."
+             5  t=${1}
+             6  echo "testing phil with ${t} verison..."
+             7  make clean &> /dev/null
+             8  make TYPE=${t} &> /dev/null
+             9  i=0
+            10  for p in {2..50}; do
+            11      for n in {1..100}; do
+            12          for k in {1..300}; do
+            13              if [ ${i} -ne 0 ]; then
+            14                  if [ $((${i} % 10000)) -eq 0 ]; then
+            15                      echo "${i} tests run"
+            16                  fi
+            17              fi
+            18              s=$((RANDOM%50000+1000));
+               
+            19              ./phil ${p} ${n} ${s} &> out.temp
+            20              x=`egrep -ci "Philosophers terminated" out.temp`;
+            21              y=`egrep -ci "deadlock" out.temp`;
+            22              z=`egrep -ci "assertion" out.temp`;
+            23              if [ ${x} -eq 0 ] || [ ${y} -ne 0 ] || [ ${z} -ne 0 ]; then
+            24                  echo "test failed with input ${p} ${n} ${s}" >& 2
+            25                  echo "and output: " >& 2
+            26                  cat out.temp;
+            27                  exit 1;
+            28              fi
+            29              i=$((${i}+1))
+            30          done
+            31      done
+            32  done
+            33  echo "all tests passed!"
+            34  make clean &> /dev/null
+            35  rm out.temp
+            36  exit 0
+            37  x284li@linux024:~/cs343/a5$ exit
+            38  exit
+               
+            39  Script done on Mon 18 Nov 2013 04:32:52 PM EST
+
+    TESTING
+        Here is the script-fixed log of the testing performed with line numbers
+        attached.
+
+ 1  Script started on Mon 18 Nov 2013 04:51:20 PM EST           1  Script started on Mon 18 Nov 2013 04:51:45 PM EST
+ 2  x284li@linux028:~/cs343/a5/a5INT$ time ./runTest.sh INT     2  x284li@linux024:~/cs343/a5/a5INTB$ time ./runTest.sh INTB
+ 3  test started...                                             3  test started...
+ 4  testing phil with INT verison...                            4  testing phil with INTB verison...
+ 5  25000 tests run                                             5  25000 tests run
+ 6  50000 tests run                                             6  50000 tests run
+ 7  75000 tests run                                             7  75000 tests run
+ 8  100000 tests run                                            8  100000 tests run
+ 9  125000 tests run                                            9  125000 tests run
+10  150000 tests run                                            10  150000 tests run
+11  175000 tests run                                            11  175000 tests run
+12  200000 tests run                                            12  200000 tests run
+13  225000 tests run                                            13  225000 tests run
+14  250000 tests run                                            14  250000 tests run
+15  275000 tests run                                            15  275000 tests run
+16  300000 tests run                                            16  300000 tests run
+17  325000 tests run                                            17  325000 tests run
+18  350000 tests run                                            18  350000 tests run
+19  all tests passed!                                           19  all tests passed!
+   
+20  real    97m44.669s                                          20  real    137m15.080s
+21  user    9m42.120s                                           21  user    26m8.050s
+22  sys 7m8.740s                                                22  sys     13m30.450s
+23  x284li@linux028:~/cs343/a5/a5INT$ exit                      23  x284li@linux024:~/cs343/a5/a5INTB$ exit
+24  exit                                                        24  exit
+   
+25  Script done on Mon 18 Nov 2013 06:30:01 PM EST              25  Script done on Mon 18 Nov 2013 07:09:26 PM EST
+
+
+ 1  Script started on Mon 18 Nov 2013 04:51:26 PM EST            1  Script started on Mon 18 Nov 2013 04:52:16 PM EST
+ 2  x284li@linux024:~/cs343/a5/a5AUTO$ time ./runTest.sh AUTO    2  x284li@linux024:~/cs343/a5/a5TASK$ time ./runTest.sh TASK
+ 3  test started...                                              3  test started...
+ 4  testing phil with AUTO verison...                            4  testing phil with TASK verison...
+ 5  25000 tests run                                              5  25000 tests run
+ 6  50000 tests run                                              6  50000 tests run
+ 7  75000 tests run                                              7  75000 tests run
+ 8  100000 tests run                                             8  100000 tests run
+ 9  125000 tests run                                             9  125000 tests run
+10  150000 tests run                                            10  150000 tests run
+11  175000 tests run                                            11  175000 tests run
+12  200000 tests run                                            12  200000 tests run
+13  225000 tests run                                            13  225000 tests run
+14  250000 tests run                                            14  250000 tests run
+15  275000 tests run                                            15  275000 tests run
+16  300000 tests run                                            16  300000 tests run
+17  325000 tests run                                            17  325000 tests run
+18  350000 tests run                                            18  350000 tests run
+19  all tests passed!                                           19  all tests passed!
+
+20  real    102m29.800s                                         20  real    106m44.033s
+21  user    12m38.130s                                          21  user    14m21.630s
+22  sys     8m11.580s                                           22  sys     8m51.750s
+23  x284li@linux024:~/cs343/a5/a5AUTO$ exit                     23  x284li@linux024:~/cs343/a5/a5TASK$ exit
+24  exit                                                        24  exit
+
+25  Script done on Mon 18 Nov 2013 06:41:06 PM EST              25  Script done on Mon 18 Nov 2013 06:41:27 PM EST
+
+
+        Line 3 - 13 show that the test script runs 10000 tests without being blocked, since line 14 gets
+        printed out and the execution time is finite and within a reasonable range, as shown at lines
+        15 - 17.
+
+    ANALYSIS
+        Since the test ends successfully and the execution time is within a reasonable range, it can be
+        proved that there is no deadlock occurring during the stress test, and also, there are no assertion
+        failures. Thus the synchronization is handled properly at least with reasonable efficiency.
+
+
+  TEST 2:
+  -------
+    TEST DESCRIPTION
+        For this test, I will test phil with small input arguments for the sake of line number limit.
+        For each of the four versions, I test it in a different machine, with the following input:
+            ./phil 5 15
+
+    TESTING
+        Here is the script-fixed logs of the testing performed with line numbers
+        attached for INT, INTB, AUTO, and TASK.
+
+        INT:
+             1  Script started on Mon 18 Nov 2013 05:06:52 PM EST
+             2  x284li@linux032:~/cs343/a5$ ./phil 10 15
+             3  Phil0   Phil1   Phil2   Phil3   Phil4   Phil5   Phil6   Phil7   Phil8   Phil9   
+             4  ******  ******  ******  ******  ******  ******  ******  ******  ******  ******  
+             5  H                                                                               
+             6  E5,10   H       H       H       H       H       H                               
+             7  T                                               E3,12   H       H       H       
+             8  H               E5,10                                                           
+             9  E5,5            T                               T                               
+            10  T       E5,10           W3,4    E1,14   W5,6            E2,13   W8,9    E4,11   
+            11  H       T               E5,10   T       E4,11           T                       
+            12  E5,0                                    T       H       H       E3,12   T       
+            13                          T               H       E1,11   W7,8    T               
+            14  F       ...     ...     ...     ...     ...     ...     ...     ...     ...     
+            15                  H                       W5,6    T       E5,8                    
+            16                                          E4,7                                    
+            17          H       E3,7                    T               T                       
+            18          W1,2    T               H                                               
+            19          E3,7                    E5,9                            H               
+            20          T                       T                               E1,11   H       
+            21          H                                                       T       E3,8    
+            22          E3,4                                                            T       
+            23          T               H       H               H       H       H               
+            24                                  E5,4    H                                       
+            25                  H       W3,4            W5,6            E5,3    W8,9            
+            26                  W2,3    E4,6    T               E4,7    T       E2,9    H       
+            27          H                               E5,2    T       H       T       E2,6    
+            28                  E3,4    T               T       H       E3,0    H               
+            29          W1,2                                                    W8,9            
+            30  ...     ...     ...     ...     ...     ...     ...     F       ...     ...     
+            31                  T       H               H       E3,4            E4,5    T       
+            32          E2,2    H               H       E2,0    T               T       H       
+            33          T       W2,3    E3,3    W4,5                                    E4,2    
+            34  ...     ...     ...     ...     ...     F       ...     ...     ...     ...     
+            35                  E2,2    T       E4,0                                    T       
+            36                  T                                                               
+            37  ...     ...     ...     ...     F       ...     ...     ...     ...     ...     
+            38                                                                  H               
+            39                  H                               H               E1,4            
+            40                                                  E2,2            T               
+            41          H       E2,0                            T               H               
+            42                                                                  E4,0            
+            43  ...     ...     F       ...     ...     ...     ...     ...     ...     ...     
+            44                                                                          H       
+            45  ...     ...     ...     ...     ...     ...     ...     ...     F       ...     
+            46          E2,0            H                                                       
+            47  ...     F       ...     ...     ...     ...     ...     ...     ...     ...     
+            48                                                                          E2,0    
+            49  ...     ...     ...     ...     ...     ...     ...     ...     ...     F       
+            50                          E3,0                                                    
+            51  ...     ...     ...     F       ...     ...     ...     ...     ...     ...     
+            52                                                  H                               
+            53                                                  E1,1                            
+            54                                                  T                               
+            55                                                  H                               
+            56                                                  E1,0                            
+            57  ...     ...     ...     ...     ...     ...     F       ...     ...     ...     
+            58  ***********************
+            59  Philosophers terminated
+            60  x284li@linux032:~/cs343/a5$ exit
+            61  exit
+               
+            62  Script done on Mon 18 Nov 2013 05:07:45 PM EST
+
+        INTB:
+             1  Script started on Mon 18 Nov 2013 05:08:43 PM EST
+             2  x284li@linux032:~/cs343/a5$ ./phil 10 15
+             3  Phil0   Phil1   Phil2   Phil3   Phil4   Phil5   Phil6   Phil7   Phil8   Phil9   
+             4  ******  ******  ******  ******  ******  ******  ******  ******  ******  ******  
+             5  H       H                                                                       
+             6          E1,14   H       H       H       H       H       H       H       H       
+             7          T       E4,11           E4,11                                           
+             8                                  T       E2,13                                   
+             9                                          T               E1,14   W8,9    E5,10   
+            10  E5,10           T                                               W8,9    T       
+            11                          E2,13                           T       W8,9            
+            12  T                                               E3,12   H       E1,14           
+            13  H       H               T                               W7,8    T               
+            14                                                  T       W7,8                    
+            15  E2,8    W1,2                                            E3,11           H       
+            16  T       E2,12   H       H       H       H               T               E4,6    
+            17  H       T       E2,9            E1,10   W5,6    H                       T       
+            18                          W3,4    T       W5,6    E1,11           H               
+            19                          W3,4            E5,8    T                               
+            20  B       H       T       W3,4                    H                       H       
+            21  E1,7    W1,2            E4,9    H       T       E2,9    H       E4,10   W9,0    
+            22  T       W1,2            T                               B               W9,0    
+            23                  H       H       B       H               W7,8                    
+            24          E2,10                           B                       T       W9,0    
+            25  H                       B       E1,9    W5,6    T       W7,8    H       E4,2    
+            26          T       B       W3,4            W5,6            E4,7                    
+            27  W0,1            E3,6    W3,4            W5,6                    B       T       
+            28  E5,2                    W3,4    T       W5,6    H               W8,9            
+            29                          W3,4            E5,3            T       W8,9            
+            30          H       T       W3,4    H               B               E5,5            
+            31  T       B       H       E2,7                            H               H       
+            32  H       E3,7                    B               W6,7            T               
+            33                                  W4,5    T       W6,7            H               
+            34                  W2,3    T       E1,8    H       E5,4                    E2,0    
+            35  W0,1    T       W2,3                                    W7,8                    
+            36  W0,1            E3,3                            T       W7,8    W8,9            
+            37  W0,1    H                       T                       E3,4    W8,9            
+            38  W0,1                    H               E3,0                    W8,9            
+            39  ...     ...     ...     ...     ...     ...     ...     ...     ...     F       
+            40  E1,1            T                               H               W8,9            
+            41          W1,2    H                                       T       W8,9            
+            42          W1,2            E3,4    H                       H       E3,2            
+            43  ...     ...     ...     ...     ...     F       ...     ...     ...     ...     
+            44  T       W1,2                                                                    
+            45  H       E4,3    W2,3    T                       E4,0    W7,8                    
+            46                  W2,3            E3,5                    W7,8    T               
+            47          T       W2,3                                    W7,8    H               
+            48  B               E3,0    H                               W7,8                    
+            49  ...     ...     ...     ...     ...     ...     F       ...     ...     ...     
+            50  E1,0                            T                       E3,1                    
+            51          H                       H                               W8,9            
+            52  ...     ...     F       ...     ...     ...     ...     ...     ...     ...     
+            53          B               B       B                       T       W8,9            
+            54                                                                  E2,0            
+            55  F       ...     ...     ...     ...     ...     ...     ...     ...     ...     
+            56                          E1,3                                                    
+            57          E2,1            T       E5,0                                            
+            58  ...     ...     ...     ...     ...     ...     ...     ...     F       ...     
+            59          T                                                                       
+            60  ...     ...     ...     ...     F       ...     ...     ...     ...     ...     
+            61                          H                               H                       
+            62                          E3,0                            E1,0                    
+            63  ...     ...     ...     ...     ...     ...     ...     F       ...     ...     
+            64          H                                                                       
+            65          E1,0                                                                    
+            66  ...     ...     ...     F       ...     ...     ...     ...     ...     ...     
+            67  ...     F       ...     ...     ...     ...     ...     ...     ...     ...     
+            68  ***********************
+            69  Philosophers terminated
+            70  x284li@linux032:~/cs343/a5$ exit
+            71  exit
+               
+            72  Script done on Mon 18 Nov 2013 05:08:54 PM EST
+
+        AUTO:
+             1  Script started on Mon 18 Nov 2013 05:09:50 PM EST
+             2  x284li@linux032:~/cs343/a5$ ./phil 10 15
+             3  Phil0   Phil1   Phil2   Phil3   Phil4   Phil5   Phil6   Phil7   Phil8   Phil9   
+             4  ******  ******  ******  ******  ******  ******  ******  ******  ******  ******  
+             5  H                                                                               
+             6  E4,11   H       H                                                               
+             7                  E2,13   H       H       H       H       H       H               
+             8                                                                  E2,13   H       
+             9  T                                       E2,13                   T       W9,0    
+            10                  T       W3,4                    W6,7                    E1,14   
+            11  H       E2,13   H       E5,10   W4,5    T               E2,13   H       T       
+            12  E5,6    T       E2,11   T       E2,13   H       E1,14   T       E5,8            
+            13  T               T       H       T       E1,12   T               T       H       
+            14                          E3,7                                            E2,12   
+            15          H               T       H       T       H       H               T       
+            16          E1,12                   E2,11                                           
+            17  H       T                                               E3,10                   
+            18  E5,1                            T               W6,7    T                       
+            19  T                                               E3,11           H               
+            20                  H       H                       T                       H       
+            21                  E3,8                    H                       E1,7    W9,0    
+            22          H               W3,4    H       E5,7            H       T       E3,9    
+            23  H       E5,7    T       E5,2    W4,5    T       H       E2,8    H       T       
+            24  W0,1    T       H       T       E2,9    H       W6,7            W8,9    H       
+            25  E1,0            E1,7    H               W5,6    E3,8    T       E2,5            
+            26          H               W3,4    T                       H               W9,0    
+            27                                  H                                               
+            28  F       ...     ...     ...     ...     ...     ...     ...     ...     ...     
+            29                                          E5,2    T                               
+            30          W1,2    T       E2,0                    H               T       E3,6    
+            31          E5,2    H               W4,5    T       W6,7    E1,7    H       T       
+            32  ...     ...     ...     F       ...     ...     ...     ...     ...     ...     
+            33          T       E1,6            E5,4            E4,4    T       E5,0            
+            34          H                       T                                               
+            35                                  H                                               
+            36  ...     ...     ...     ...     ...     ...     ...     ...     F       ...     
+            37          E2,0    T               E2,2    H       T                               
+            38  ...     F       ...     ...     ...     ...     ...     ...     ...     ...     
+            39                                  T       E2,0                            H       
+            40                                  H                                               
+            41                                  W4,5                                            
+            42  ...     ...     ...     ...     ...     F       ...     ...     ...     ...     
+            43                  H               E2,0                    H                       
+            44  ...     ...     ...     ...     F       ...     ...     ...     ...     ...     
+            45                                                          E1,6                    
+            46                  E4,2                                    T               E2,4    
+            47                  T                               H       H               T       
+            48                  H                                       E1,5                    
+            49                  E2,0                                                            
+            50  ...     ...     F       ...     ...     ...     ...     ...     ...     ...     
+            51                                                  W6,7    T                       
+            52                                                  E2,2    H                       
+            53                                                  T       W7,8                    
+            54                                                  H       E4,1                    
+            55                                                  E2,0    T                       
+            56  ...     ...     ...     ...     ...     ...     F       ...     ...     ...     
+            57                                                                          H       
+            58                                                                          E3,1    
+            59                                                          H               T       
+            60                                                          E1,0            H       
+            61                                                                          E1,0    
+            62  ...     ...     ...     ...     ...     ...     ...     ...     ...     F       
+            63  ...     ...     ...     ...     ...     ...     ...     F       ...     ...     
+            64  ***********************
+            65  Philosophers terminated
+            66  x284li@linux032:~/cs343/a5$ exit
+            67  exit
+               
+            68  Script done on Mon 18 Nov 2013 05:09:59 PM EST
+
+        TASK:
+             1  Script started on Mon 18 Nov 2013 05:11:26 PM EST
+             2  x284li@linux032:~/cs343/a5$ ./phil 10 15
+             3  Phil0   Phil1   Phil2   Phil3   Phil4   Phil5   Phil6   Phil7   Phil8   Phil9   
+             4  ******  ******  ******  ******  ******  ******  ******  ******  ******  ******  
+             5  H       H       H       H       H       H       H       H       H       H       
+             6  W0,1    E3,12   W2,3    E5,10   W4,5    E4,11   W6,7    E4,11   W8,9    E2,13   
+             7  E5,10   T       E3,12   T                                               T       
+             8                          H                               T       E2,13           
+             9                          W3,4    E3,12   T       E2,13                           
+            10          H       T                       H                               H       
+            11          W1,2    H                       W5,6            H               W9,0    
+            12  T       E5,7    W2,3                                    W7,8                    
+            13  H                                                               T       E3,10   
+            14  W0,1                    E5,5    T       E4,7    T       E4,7    H               
+            15  E3,7    T                       H               H               W8,9    T       
+            16                                  W4,5            W6,7    T       E4,9    H       
+            17          H       E4,8    T                                               W9,0    
+            18          W1,2            H       E3,9    T       E5,8    H                       
+            19  T                       W3,4                            W7,8                    
+            20  H                                                               T               
+            21  W0,1                                    H                       H       E1,9    
+            22          E1,6    T       E4,1    T       W5,6    T               W8,9            
+            23                                  H       E1,6            E2,5            T       
+            24          T       H               W4,5                                    H       
+            25  E3,4    H       W2,3                            H                       W9,0    
+            26          W1,2    E4,4    T               T       W6,7                            
+            27                                  E2,7    H                                       
+            28  T                                       W5,6    E4,4    T       E2,7            
+            29  H       E4,2    T       H                               H                       
+            30  W0,1            H       W3,4                            W7,8                    
+            31                  W2,3    E1,0    T                               T               
+            32                                  H                               H       E3,6    
+            33          T                       W4,5    E2,4    T       E5,0    W8,9            
+            34  ...     ...     ...     F       ...     ...     ...     ...     ...     ...     
+            35  E3,1            E1,3                            H                       T       
+            36          H                                       W6,7                    H       
+            37                                          T                               W9,0    
+            38                                  E2,5    H                                       
+            39          W1,2                            W5,6                                    
+            40  ...     ...     ...     ...     ...     ...     ...     F       ...     ...     
+            41  T       E1,1    T                               E4,0            E1,6            
+            42  H               H               T                               T       E3,3    
+            43  W0,1            W2,3            H                               H               
+            44                                  E4,1                                            
+            45  ...     ...     ...     ...     ...     ...     F       ...     ...     ...     
+            46          T       E1,2                                            W8,9    T       
+            47  E1,0            T               T       E1,3                    E5,1    H       
+            48  F       ...     ...     ...     ...     ...     ...     ...     ...     ...     
+            49          H                       H                                       W9,0    
+            50          E1,0    H               W4,5    T                       T       E3,0    
+            51                  W2,3            E1,0                                            
+            52  ...     F       ...     ...     ...     ...     ...     ...     ...     ...     
+            53                  E2,0                    H                       H               
+            54                                          W5,6                    W8,9            
+            55  ...     ...     ...     ...     ...     ...     ...     ...     ...     F       
+            56                                                                  E1,0            
+            57  ...     ...     ...     ...     F       ...     ...     ...     ...     ...     
+            58                                          E3,0                                    
+            59  ...     ...     F       ...     ...     ...     ...     ...     ...     ...     
+            60  ...     ...     ...     ...     ...     ...     ...     ...     F       ...     
+            61  ...     ...     ...     ...     ...     F       ...     ...     ...     ...     
+            62  ***********************
+            63  Philosophers terminated
+            64  x284li@linux032:~/cs343/a5$ eixit
+            65  exit
+               
+            66  Script done on Mon 18 Nov 2013 05:11:33 PM EST
+
+    ANALYSIS:
+    • For INT version:
+        - From line 5 to 57, we can see that when a philosopher is eating, there are not any philosophers who are
+            simultaneously eating next to him. 
+        - And from line 33 to 35, we can see that concurrency is maximized since
+            once a philosopher stopped eating, his neighbours are woken up immediately to eat. 
+        - And also, there is no starvation since the E's and W's are fairly evenly distributed and there is no two 
+            philosophers that keep eating alternatingly. In the implementation, I assign priority to philosophers 
+            based on the number of times they have eaten. And priority is assigned to philosopher who has lower 
+            eating times.
+        - From the output, the numbers next to E's and W's are consistent and making sense.
+    • For INTB version:
+        - From the output, there are no philosophers next to each other who are eating at the same time. And also,
+            When a philosopher finishes eating, the other two waiting ones next to him will be woken up and eat.
+        - There are B's appearing at some places in the output. For example, at line 20, Phil0 is barging in
+            because Phil3 is a signalled task and is ahead of him. So we put him in the condition queue. After
+            Phil3 finishes eating, Phil0 becomes an non-barging task and begins to run since he also satifies
+            the eating condition. At line 22 and 23, Phil4 and Phil7 are barging in after Phil9 wakes up and 
+            notifies all tasks, because Phil1 is a signalled task that is ahead of them. And then, Phil7 turns 
+            into a waiting task because Phil1 finishes being signalled and start eating, while Phil4 immediately 
+            starts eating. Then, at line 24, Phil5 is barging in after Phil1 wakes up, because Phil9 is a signalled 
+            task and is ahead of him. After Phil9 start eating, Phil5 becomes a non-barging task, but start waiting 
+            since Phil4 is eating.
+        - There cannot be starvation because there is only one condition queue used. All tasks are automatically
+            prioritized (FIFO).
+    • For AUTO version:
+        - From the output, there are no philosophers next to each other who are eating at the same time. And also,
+            When a philosopher finishes eating, the other two waiting ones next to him will be woken up and eat.
+        - There cannot be starvation because only one condition queue is used and all tasks are automatically
+            prioritized (FIFO);
+    • For TASK version:
+        - All analysis for INT version applies here.
+
+    CONCLUSION:
+    Since there are no deadlocks and assertion failures, synchronization is guaranteed. Since the output for all
+    four versions makes sense, the logic is implemented correctly and with reasonable efficiency.
+
+ 
