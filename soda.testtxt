@@ -79,30 +79,37 @@ Compiled it with
 
 After creating config file binary we wrote a test bash script for running our binary 50000 times:
 
-
     0   #!/bin/bash
     1   
-    2   echo "SCRIPT INT STARTED"
-    3   counter=0
-    4   for k in {1..100000}; do
-    5       ./soda soda.config ${k} &> result.txt
-    6               
-    7       y=`egrep -ci "assertion" result.txt`;
-    8   
-    9       z=`egrep -ci "deadlock" result.txt`;
-    10    
-    11        if [ ${y} -ne 0 ] || [ ${z} -ne 0 ]; then
-    12        echo "test failed"
-    13             exit 1;
-    14        fi
-    15        counter=$((${counter}+1))
-    16        #if [ $((${counter} % 5)) -eq 0 ]; then
-    17        echo "passed ${counter}"
-    18        # fi
-    19    done
-    20    echo "ALL TEST SUCCESSFULLY PASSED!"
-    21    make clean &> /dev/null
-    22    exit 0
+    2   numtests=50000
+    3   u++ main.cc &> /dev/null
+    4   make &> /dev/null
+    5   echo "test started... will run ${numtests} tests"
+    6   counter=0
+    7   for (( k = 1; k < ${numtests}; k++ )); do
+    8       ./a.out > currentConfigFile.txt
+    9       ./soda currentConfigFile.txt ${k} &> result.txt
+    10      if [ $? -ne 0 ]; then
+    11          echo "test failed with seed ${k}"
+    12          exit 1;
+    13      fi
+    14      echo "current seed: ${k}" > seed.txt
+    15      x=`egrep -ci "***********************" result.txt`;
+    16      y=`egrep -ci "assertion" result.txt`;
+    17      z=`egrep -ci "deadlock" result.txt`;
+    18      if [ ${x} -eq 0 ] || [ ${y} -ne 0 ] || [ ${z} -ne 0 ]; then
+    19          echo "test failed with seed ${k}"
+    20          exit 1;
+    21      fi
+    22      counter=$((${counter}+1))
+    23      if [ $((${counter} % 5000)) -eq 0 ]; then
+    24          echo "${counter} tests run"
+    25      fi  
+    26  done
+    27  echo "all tests passed!"
+    28  make clean &> /dev/null
+    29  exit 0
+
 
 
 Out put of the bash script:
@@ -129,7 +136,10 @@ Out put of the bash script:
     20    
     21    Script done on Mon 02 Dec 2013 11:28:04 AM EST
 
-From our test result we can conclude that our binary doesn't have deadlock with in those 50000 runs.
+Since the test ends successfully and the execution time is within a reasonable range, it can be
+proved that there is no deadlock occurring during the stress test, and also, there are no assertion
+failures. Thus the synchronization is handled properly at least with reasonable efficiency.
+From our test result we can conclude that our binary doesn't have deadlock with in those 50000 tests.
 
 
 Output analysis:
@@ -188,7 +198,7 @@ This is our output of our binary with give config file.
 50                              d1,3
 51      D0,2    T1,7            U1,11   G7                      R       r
 52      D1,2                    D1,0                                                    t1,7
-53      D1,3    C1,5                            L                       R               T1,7
+53      D1,3    C1,5                                    L               R               T1,7
 54                                                                                      t1,5
 55      D0,3    W                                       B3      B3,2                    T1,5
 56      D1,3
@@ -204,11 +214,11 @@ This is our output of our binary with give config file.
 66      D1,1
 67      D0,2    T1,7            P2
 68                              d0,2                                                    t1,7
-69      D1,2    C1,5                    P       L               r                       T1,7
+69      D1,2    C1,5                    P               L       r                       T1,7
 70      D1,2                    D0,1
 71                              d1,1
 72                              U1,7                                                    t1,5
-73      D0,3    C1,5            D1,0    G8      L               R       r               T1,5
+73      D0,3    C1,5            D1,0    G8              L       R       r               T1,5
 74                                                                      R               t1,5
 75      D1,3    W                                       B3      B3,4                    T1,5
 76      D0,2                    P8
@@ -266,6 +276,25 @@ Output analysis:
   
   Students 0 was buying drink form V0 and it was re-stocking (Line 12-15), it moved to vending machine 1.
   since Vending machine 1 was not stock. The student moved to V2 and lastly back to V0. Which is the
-  correct behavior. Same for student 1.
+  correct behavior. Same for student 1. 
 
+  We can see that parent is performing deposit with some delay, it is shutdown correctly
+  when program finished and depositing money in a randomized fashion.
   
+  NameServer is also assigning same students in a RoR fashion. We can notice it on Line 6, 15, 24, 28
+  Where the NameServer is assigning student to 0 -> 1 -> 2 -> 0.
+
+  WatCard office is creating job one after another without waiting for Cour0 to finish the transfer.
+  Because create function returns a future.
+
+  The truck delivery pattern match the given binary's pattern.
+
+  The Bottling Plant's production pattern match the given binary's pattern.
+
+  Courier is pulling off one job at a time and it is only pull the job when the last job is finished.
+
+
+In Conclusion:
+  Since there are no deadlocks and assertion failures, synchronization is guaranteed. Since the 
+  output follow the given assignment's logic. we can say the solution is implemented correctly 
+  and with reasonable efficiency.
