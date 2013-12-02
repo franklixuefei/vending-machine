@@ -2,28 +2,19 @@
 
 
 
+/***************** NameServer::main ****************
+ Purpose:   since NameServer is a Task it has to have a main
+ ******************************************************/
 void NameServer::main() {
-
-/*  
-  The NameServer is an administrator task used to manage the vending-machine names. 
-  The name server is passed the number of vending machines, NumVendingMachines, and the number of students, NumStudents.
-  It begins by logically distributing the students evenly across the vending machines in a round-robin fashion.
-  That is, student id 0 is assigned to the first registered vending-machine, student id 1 is assigned to the second
-  registered vending-machine, etc., 
-  until there are no more registered vending-machines, and then start again with the first registered vending-machine. 
-  Vending machines call VMregister to register themselves so students can subsequently locate them. 
-  A student calls getMachine to find a vending machine, and the name server must
-  cycle through the vending machines separately for each student starting from the initial position via modulo
-  incrementing to ensure a student has a chance to visit every machine. The truck calls getMachineList to obtain
-  an array of pointers to vending machines so it can visit each machine to deliver new soda.
-  */
   for(;;){
     _Accept (~NameServer) {
       break;
     } or _Accept (VMregister) {
+      // after it has been registered it will increase the current counter
       mCurrentVendingMachineCounter ++;
 
     } or _Accept (getMachine) {
+      // shift the student to the next machine
       mStudentVendingMachineID[mLastVisitedStudent] = (mStudentVendingMachineID[mLastVisitedStudent]+1) % mNumVendingMachines;
 
     } or _Accept (getMachineList) {
@@ -34,6 +25,10 @@ void NameServer::main() {
 
 }
 
+
+/***************** NameServer::NameServer ****************
+ Purpose:   the constructor 
+ ******************************************************/
 NameServer::NameServer( Printer &prt, unsigned int numVendingMachines, unsigned int numStudents )
   :mPrt(prt),
   mNumVendingMachines(numVendingMachines),
@@ -43,28 +38,40 @@ NameServer::NameServer( Printer &prt, unsigned int numVendingMachines, unsigned 
   mCurrentVendingMachineCounter(0) {
 
     mPrt.print(Printer::NameServer, 'S' );
+    // assign each student to a machine
     for (unsigned int i = 0; i < mNumStudents; ++i) {
       mStudentVendingMachineID[i] = (i)%mNumVendingMachines;
     }
+    // clear the array for placing vending machine
     for (unsigned int i = 0; i < numVendingMachines; ++i) {
         mMachineList[i] = NULL;
     }
 
 }
 
-
+/***************** NameServer::~NameServer ****************
+ Purpose:   the destructor
+ ******************************************************/
 NameServer::~NameServer(){
   mPrt.print(Printer::NameServer, 'F' );
   delete[] mMachineList;
   delete[] mStudentVendingMachineID;
 }
 
+
+/***************** NameServer::VMregister ****************
+ Purpose:   register the vending machine for student purchase
+ return:  void
+ ******************************************************/
 void NameServer::VMregister( VendingMachine *vendingmachine ) {
   mPrt.print(Printer::NameServer, 'R', mCurrentVendingMachineCounter );
   mMachineList[mCurrentVendingMachineCounter] = vendingmachine;
 }
 
-
+/***************** NameServer::getMachine ****************
+ Purpose:   get the vending machine student should be using
+ return:  the vending machine (VendingMachine *)
+ ******************************************************/
 VendingMachine *NameServer::getMachine( unsigned int id ) {
   mPrt.print(Printer::NameServer, 'N', id, mStudentVendingMachineID[id]);
   mLastVisitedStudent = id;
@@ -73,7 +80,10 @@ VendingMachine *NameServer::getMachine( unsigned int id ) {
   return vm;
 }
 
-
+/***************** NameServer::getMachineList ****************
+ Purpose:   get a list of machine
+ return:  the list of machine (VendingMachine *)
+ ******************************************************/
 VendingMachine **NameServer::getMachineList() {
   return mMachineList;
 }
